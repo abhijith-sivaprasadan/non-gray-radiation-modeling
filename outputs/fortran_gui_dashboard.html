@@ -21,9 +21,12 @@ Buttons:
   Run All       - regenerates every project output and report.
   Run Selected  - regenerates the selected project section.
   Refresh       - reloads generated outputs into this view.
-  Export HTML   - builds outputs\dashboard.html: real figures, tables, and
-                  headline metrics from the generated CSV/PNG artifacts.
-  Open HTML     - opens that dashboard in your default browser.
+  Open Live     - starts the local dashboard server (if not already running)
+                  and opens the live, interactive app in your browser: real
+                  charts with hover tooltips, sortable/filterable tables, and
+                  Run All / Run Project buttons that re-run and auto-refresh.
+  Export HTML   - builds outputs\dashboard.html: a portable, offline, single-
+                  file snapshot of the same figures/tables for sharing.
   Outputs       - opens the outputs folder.
 
 Source basis:
@@ -40,6 +43,7 @@ FDS clone status:
 
 Recent run logs:
   [OK] outputs\gui_run_all.log
+  [OK] outputs\gui_run_project2.log
   [OK] outputs\gui_run_radcal.log
 
 Tail of outputs\gui_run_all.log:
@@ -47,6 +51,7 @@ Tail of outputs\gui_run_all.log:
   Wrote outputs\project2_real_particles
   Wrote outputs\project3_real_dom
   Wrote outputs\project4_real_surrogate
+  Wrote E:\Thermal Radiation Modeling\outputs\dashboard.html
 
 </pre></section>
 <section>
