@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import _bootstrap  # noqa: F401
 
+import build_dashboard
 import run_project1_real_hydrogen
 import run_project2_real_particles
 import run_project3_real_dom
@@ -15,6 +16,7 @@ def main() -> None:
     run_project2_real_particles.main()
     run_project3_real_dom.main()
     run_project4_real_surrogate.main()
+    build_dashboard.main()
 
 
 if __name__ == "__main__":

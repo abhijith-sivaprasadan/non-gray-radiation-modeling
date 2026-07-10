@@ -323,6 +323,7 @@ contains
             call get_command_argument(1, first_arg)
             select case (trim(adjustl(first_arg)))
             case ('--export-html')
+                call build_dashboard_via_python()
                 call write_html_dashboard('outputs\fortran_gui_dashboard.html')
                 return
             case ('--smoke')
@@ -423,11 +424,9 @@ contains
                 call update_section(current_section)
                 call set_status('Refreshed from generated CSV artifacts.')
             case (ID_EXPORT)
-                call write_html_dashboard('outputs\fortran_gui_dashboard.html')
-                call set_status('Wrote outputs\fortran_gui_dashboard.html')
-                call show_info('Wrote outputs\fortran_gui_dashboard.html', 'Fortran GUI')
+                call run_dashboard_build()
             case (ID_OPEN_HTML)
-                call open_path('outputs\fortran_gui_dashboard.html')
+                call open_path('outputs\dashboard.html')
             case (ID_OPEN_OUTPUTS)
                 call open_path('outputs')
             case (ID_CLOSE)
@@ -612,6 +611,32 @@ contains
         end if
     end subroutine run_workflow
 
+    subroutine build_dashboard_via_python()
+        character(len=:), allocatable :: cmd
+        integer :: exitstat
+
+        call ensure_outputs_dir()
+        cmd = 'cmd /c "python scripts\build_dashboard.py > outputs\gui_build_dashboard.log 2>&1"'
+        call execute_command_line(cmd, wait=.true., exitstat=exitstat)
+    end subroutine build_dashboard_via_python
+
+    subroutine run_dashboard_build()
+        integer(c_int) :: ok
+
+        call set_status('Building outputs\dashboard.html from generated figures and tables ...')
+        ok = UpdateWindow(h_main)
+        call build_dashboard_via_python()
+
+        if (file_exists('outputs\dashboard.html')) then
+            call set_status('Wrote outputs\dashboard.html')
+            call show_info('Wrote outputs\dashboard.html', 'Fortran GUI')
+        else
+            call set_status('Dashboard build failed. See outputs\gui_build_dashboard.log')
+            call show_info('Dashboard build failed. Run scripts/run_all.py first, then check '// &
+                            'outputs\gui_build_dashboard.log', 'Fortran GUI')
+        end if
+    end subroutine run_dashboard_build
+
     subroutine ensure_outputs_dir()
         integer :: exitstat
 
@@ -741,8 +766,9 @@ contains
             call add_line(text, '  Run All       - regenerates every project output and report.')
             call add_line(text, '  Run Selected  - regenerates the selected project section.')
             call add_line(text, '  Refresh       - reloads generated outputs into this view.')
-            call add_line(text, '  Export HTML   - writes an HTML report from the GUI summaries.')
-            call add_line(text, '  Open HTML     - opens that report in your default browser.')
+            call add_line(text, '  Export HTML   - builds outputs\dashboard.html: real figures, tables, and')
+            call add_line(text, '                  headline metrics from the generated CSV/PNG artifacts.')
+            call add_line(text, '  Open HTML     - opens that dashboard in your default browser.')
             call add_line(text, '  Outputs       - opens the outputs folder.')
             call add_line(text, '')
             call add_line(text, 'Source basis:')
@@ -1087,7 +1113,11 @@ contains
         integer(c_intptr_t) :: result_code
 
         if (.not. file_exists(path)) then
-            if (index(path, '.html') > 0) call write_html_dashboard(path)
+            if (trim(path) == 'outputs\dashboard.html') then
+                call build_dashboard_via_python()
+            else if (index(path, '.html') > 0) then
+                call write_html_dashboard(path)
+            end if
             if (trim(path) == 'outputs') call ensure_outputs_dir()
         end if
         operation = to_c_text('open')
