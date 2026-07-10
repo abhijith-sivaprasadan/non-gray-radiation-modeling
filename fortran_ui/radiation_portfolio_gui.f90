@@ -1,6 +1,6 @@
 module radiation_portfolio_win32_gui
-    use, intrinsic :: iso_c_binding, only: c_associated, c_char, c_funloc, c_funptr, &
-        c_int, c_intptr_t, c_loc, c_long, c_null_char, c_null_ptr, c_ptr, c_short
+    use, intrinsic :: iso_c_binding, only: c_associated, c_char, c_f_pointer, c_funloc, c_funptr, &
+        c_int, c_intptr_t, c_loc, c_long, c_null_char, c_null_funptr, c_null_ptr, c_ptr, c_short
     implicit none
     private
 
@@ -12,6 +12,7 @@ module radiation_portfolio_win32_gui
     integer, parameter :: section_count = 7
 
     integer(c_int), parameter :: CW_USEDEFAULT = int(Z'80000000', c_int)
+    integer(c_int), parameter :: SW_HIDE = 0_c_int
     integer(c_int), parameter :: SW_SHOW = 5_c_int
     integer(c_int), parameter :: SW_SHOWNORMAL = 1_c_int
     integer(c_int), parameter :: WM_CREATE = 1_c_int
@@ -65,6 +66,37 @@ module radiation_portfolio_win32_gui
 
     character(len=*), parameter :: DASHBOARD_URL = 'http://127.0.0.1:8765/'
 
+    integer(c_int), parameter :: ICC_LISTVIEW_CLASSES = int(Z'00000001', c_int)
+    integer(c_int), parameter :: ICC_BAR_CLASSES = int(Z'00000004', c_int)
+    integer(c_int), parameter :: ICC_STANDARD_CLASSES = int(Z'00004000', c_int)
+    integer(c_int), parameter :: DWMWA_USE_IMMERSIVE_DARK_MODE = 20_c_int
+    integer(c_int), parameter :: WM_DRAWITEM = 43_c_int
+    integer(c_int), parameter :: WM_NOTIFY = 78_c_int
+    integer(c_int), parameter :: SS_OWNERDRAW = 13_c_int
+    integer(c_int), parameter :: SS_CENTER = 1_c_int
+
+    integer(c_int), parameter :: LVS_REPORT = int(Z'00000001', c_int)
+    integer(c_int), parameter :: LVS_SINGLESEL = int(Z'00000004', c_int)
+    integer(c_int), parameter :: LVS_SHOWSELALWAYS = int(Z'00000008', c_int)
+    integer(c_int), parameter :: LVS_EX_GRIDLINES = int(Z'00000001', c_int)
+    integer(c_int), parameter :: LVS_EX_FULLROWSELECT = int(Z'00000020', c_int)
+    integer(c_int), parameter :: LVM_FIRST = int(Z'00001000', c_int)
+    integer(c_int), parameter :: LVM_GETITEMCOUNT = LVM_FIRST + 4_c_int
+    integer(c_int), parameter :: LVM_INSERTITEMA = LVM_FIRST + 7_c_int
+    integer(c_int), parameter :: LVM_DELETEALLITEMS = LVM_FIRST + 9_c_int
+    integer(c_int), parameter :: LVM_INSERTCOLUMNA = LVM_FIRST + 27_c_int
+    integer(c_int), parameter :: LVM_SETITEMTEXTA = LVM_FIRST + 46_c_int
+    integer(c_int), parameter :: LVM_SETEXTENDEDLISTVIEWSTYLE = LVM_FIRST + 54_c_int
+    integer(c_int), parameter :: LVCF_FMT = int(Z'00000001', c_int)
+    integer(c_int), parameter :: LVCF_WIDTH = int(Z'00000002', c_int)
+    integer(c_int), parameter :: LVCF_TEXT = int(Z'00000004', c_int)
+    integer(c_int), parameter :: LVCF_SUBITEM = int(Z'00000008', c_int)
+    integer(c_int), parameter :: LVCFMT_LEFT = 0_c_int
+    integer(c_int), parameter :: LVIF_TEXT = int(Z'00000001', c_int)
+
+    integer, parameter :: max_picture_slots = 4
+    integer, parameter :: max_dynamic_controls = 12
+
     character(kind=c_char, len=31), target, save :: class_name = &
         'RadiationPortfolioWin32Gui'//c_null_char
     character(kind=c_char, len=51), target, save :: app_title = &
@@ -73,6 +105,7 @@ module radiation_portfolio_win32_gui
     character(kind=c_char, len=5), target, save :: edit_class = 'EDIT'//c_null_char
     character(kind=c_char, len=7), target, save :: button_class = 'BUTTON'//c_null_char
     character(kind=c_char, len=7), target, save :: static_class = 'STATIC'//c_null_char
+    character(kind=c_char, len=14), target, save :: listview_class = 'SysListView32'//c_null_char
 
     character(len=46), parameter :: section_titles(section_count) = &
         [character(len=46) :: &
@@ -103,6 +136,20 @@ module radiation_portfolio_win32_gui
     type(c_ptr), save :: h_button_font = c_null_ptr
     integer, save :: current_section = 1
 
+    type(c_ptr), save :: h_picture(max_picture_slots) = c_null_ptr
+    character(len=512), save :: picture_path(max_picture_slots) = ''
+    integer, save :: picture_slot_count = 0
+
+    type(c_ptr), save :: h_dynamic(max_dynamic_controls) = c_null_ptr
+    integer, save :: dynamic_control_count = 0
+
+    integer(c_intptr_t), save :: gdiplus_token = 0_c_intptr_t
+
+    integer(c_int), save :: content_area_x = 292_c_int
+    integer(c_int), save :: content_area_y = 54_c_int
+    integer(c_int), save :: content_area_w = 820_c_int
+    integer(c_int), save :: content_area_h = 600_c_int
+
     type, bind(C) :: POINT_T
         integer(c_long) :: x
         integer(c_long) :: y
@@ -129,6 +176,63 @@ module radiation_portfolio_win32_gui
         type(c_ptr) :: menu_name
         type(c_ptr) :: class_name
     end type WNDCLASSA_T
+
+    type, bind(C) :: INITCOMMONCONTROLSEX_T
+        integer(c_int) :: dw_size
+        integer(c_int) :: dw_icc
+    end type INITCOMMONCONTROLSEX_T
+
+    type, bind(C) :: RECT_T
+        integer(c_long) :: left
+        integer(c_long) :: top
+        integer(c_long) :: right
+        integer(c_long) :: bottom
+    end type RECT_T
+
+    type, bind(C) :: DRAWITEMSTRUCT_T
+        integer(c_int) :: ctl_type
+        integer(c_int) :: ctl_id
+        integer(c_int) :: item_id
+        integer(c_int) :: item_action
+        integer(c_int) :: item_state
+        type(c_ptr) :: hwnd_item
+        type(c_ptr) :: hdc
+        type(RECT_T) :: rc_item
+        integer(c_intptr_t) :: item_data
+    end type DRAWITEMSTRUCT_T
+
+    ! GdiplusStartupInput: {UINT32 GdiplusVersion; DebugEventProc callback; BOOL, BOOL}
+    type, bind(C) :: GDIPLUS_STARTUP_INPUT_T
+        integer(c_int) :: gdiplus_version
+        type(c_funptr) :: debug_event_callback
+        integer(c_int) :: suppress_background_thread
+        integer(c_int) :: suppress_external_codecs
+    end type GDIPLUS_STARTUP_INPUT_T
+
+    ! LVCOLUMNA, truncated after iOrder (all fields this code ever sets/reads).
+    type, bind(C) :: LVCOLUMNA_T
+        integer(c_int) :: mask
+        integer(c_int) :: fmt
+        integer(c_int) :: cx
+        type(c_ptr) :: psz_text
+        integer(c_int) :: cch_text_max
+        integer(c_int) :: i_sub_item
+        integer(c_int) :: i_image
+        integer(c_int) :: i_order
+    end type LVCOLUMNA_T
+
+    ! LVITEMA, truncated after lParam (all fields this code ever sets/reads).
+    type, bind(C) :: LVITEMA_T
+        integer(c_int) :: mask
+        integer(c_int) :: i_item
+        integer(c_int) :: i_sub_item
+        integer(c_int) :: state
+        integer(c_int) :: state_mask
+        type(c_ptr) :: psz_text
+        integer(c_int) :: cch_text_max
+        integer(c_int) :: i_image
+        integer(c_intptr_t) :: l_param
+    end type LVITEMA_T
 
     interface
         function GetModuleHandleA(lp_module_name) bind(C, name='GetModuleHandleA') result(handle)
@@ -315,6 +419,107 @@ module radiation_portfolio_win32_gui
             import :: c_int
             integer(c_int), value :: dw_milliseconds
         end subroutine Sleep
+
+        function InitCommonControlsEx(picce) bind(C, name='InitCommonControlsEx') result(ret)
+            import :: INITCOMMONCONTROLSEX_T, c_int
+            type(INITCOMMONCONTROLSEX_T), intent(in) :: picce
+            integer(c_int) :: ret
+        end function InitCommonControlsEx
+
+        function DwmSetWindowAttribute(hwnd, dw_attribute, p_attribute, cb_attribute) &
+            bind(C, name='DwmSetWindowAttribute') result(hresult)
+            import :: c_int, c_ptr
+            type(c_ptr), value :: hwnd
+            integer(c_int), value :: dw_attribute
+            type(c_ptr), value :: p_attribute
+            integer(c_int), value :: cb_attribute
+            integer(c_int) :: hresult
+        end function DwmSetWindowAttribute
+
+        function GdiplusStartup(token, input, output) bind(C, name='GdiplusStartup') result(status)
+            import :: c_int, c_intptr_t, c_ptr, GDIPLUS_STARTUP_INPUT_T
+            integer(c_intptr_t), intent(out) :: token
+            type(GDIPLUS_STARTUP_INPUT_T), intent(in) :: input
+            type(c_ptr), value :: output
+            integer(c_int) :: status
+        end function GdiplusStartup
+
+        subroutine GdiplusShutdown(token) bind(C, name='GdiplusShutdown')
+            import :: c_intptr_t
+            integer(c_intptr_t), value :: token
+        end subroutine GdiplusShutdown
+
+        function GdipLoadImageFromFile(filename, image) bind(C, name='GdipLoadImageFromFile') result(status)
+            import :: c_int, c_ptr
+            type(c_ptr), value :: filename
+            type(c_ptr), intent(out) :: image
+            integer(c_int) :: status
+        end function GdipLoadImageFromFile
+
+        function GdipCreateFromHDC(hdc, graphics) bind(C, name='GdipCreateFromHDC') result(status)
+            import :: c_int, c_ptr
+            type(c_ptr), value :: hdc
+            type(c_ptr), intent(out) :: graphics
+            integer(c_int) :: status
+        end function GdipCreateFromHDC
+
+        function GdipDeleteGraphics(graphics) bind(C, name='GdipDeleteGraphics') result(status)
+            import :: c_int, c_ptr
+            type(c_ptr), value :: graphics
+            integer(c_int) :: status
+        end function GdipDeleteGraphics
+
+        function GdipDisposeImage(image) bind(C, name='GdipDisposeImage') result(status)
+            import :: c_int, c_ptr
+            type(c_ptr), value :: image
+            integer(c_int) :: status
+        end function GdipDisposeImage
+
+        function GdipGetImageWidth(image, width) bind(C, name='GdipGetImageWidth') result(status)
+            import :: c_int, c_ptr
+            type(c_ptr), value :: image
+            integer(c_int), intent(out) :: width
+            integer(c_int) :: status
+        end function GdipGetImageWidth
+
+        function GdipGetImageHeight(image, height) bind(C, name='GdipGetImageHeight') result(status)
+            import :: c_int, c_ptr
+            type(c_ptr), value :: image
+            integer(c_int), intent(out) :: height
+            integer(c_int) :: status
+        end function GdipGetImageHeight
+
+        function GdipDrawImageRectI(graphics, image, x, y, width, height) &
+            bind(C, name='GdipDrawImageRectI') result(status)
+            import :: c_int, c_ptr
+            type(c_ptr), value :: graphics
+            type(c_ptr), value :: image
+            integer(c_int), value :: x
+            integer(c_int), value :: y
+            integer(c_int), value :: width
+            integer(c_int), value :: height
+            integer(c_int) :: status
+        end function GdipDrawImageRectI
+
+        function FillRect(hdc, rc, hbr) bind(C, name='FillRect') result(ret)
+            import :: c_int, c_ptr, RECT_T
+            type(c_ptr), value :: hdc
+            type(RECT_T), intent(in) :: rc
+            type(c_ptr), value :: hbr
+            integer(c_int) :: ret
+        end function FillRect
+
+        function CreateSolidBrush(color) bind(C, name='CreateSolidBrush') result(hbr)
+            import :: c_int, c_ptr
+            integer(c_int), value :: color
+            type(c_ptr) :: hbr
+        end function CreateSolidBrush
+
+        function DeleteObject(h_object) bind(C, name='DeleteObject') result(ret)
+            import :: c_int, c_ptr
+            type(c_ptr), value :: h_object
+            integer(c_int) :: ret
+        end function DeleteObject
     end interface
 
 contains
@@ -322,9 +527,14 @@ contains
     subroutine run_gui()
         type(WNDCLASSA_T) :: wc
         type(MSG_T) :: msg
+        type(INITCOMMONCONTROLSEX_T) :: icc
         integer(c_short) :: atom
         integer(c_int) :: ok
         character(len=64) :: first_arg
+
+        icc%dw_size = int(storage_size(icc) / 8, c_int)
+        icc%dw_icc = ICC_LISTVIEW_CLASSES + ICC_STANDARD_CLASSES + ICC_BAR_CLASSES
+        ok = InitCommonControlsEx(icc)
 
         if (command_argument_count() > 0) then
             call get_command_argument(1, first_arg)
@@ -338,6 +548,8 @@ contains
                 return
             end select
         end if
+
+        call start_gdiplus()
 
         h_instance = GetModuleHandleA(c_null_ptr)
         h_font = GetStockObject(DEFAULT_GUI_FONT)
@@ -389,7 +601,21 @@ contains
             ok = TranslateMessage(msg)
             call ignore_intptr(DispatchMessageA(msg))
         end do
+
+        if (gdiplus_token /= 0_c_intptr_t) call GdiplusShutdown(gdiplus_token)
     end subroutine run_gui
+
+    subroutine start_gdiplus()
+        type(GDIPLUS_STARTUP_INPUT_T) :: startup_input
+        integer(c_int) :: status
+
+        startup_input%gdiplus_version = 1_c_int
+        startup_input%debug_event_callback = c_null_funptr
+        startup_input%suppress_background_thread = 0_c_int
+        startup_input%suppress_external_codecs = 0_c_int
+        status = GdiplusStartup(gdiplus_token, startup_input, c_null_ptr)
+        if (status /= 0_c_int) gdiplus_token = 0_c_intptr_t
+    end subroutine start_gdiplus
 
     function wnd_proc(hwnd, message, wparam, lparam) bind(C) result(ret)
         type(c_ptr), value :: hwnd
@@ -441,6 +667,9 @@ contains
             case default
                 ret = DefWindowProcA(hwnd, message, wparam, lparam)
             end select
+        case (WM_DRAWITEM)
+            call handle_draw_item(lparam)
+            ret = 1_c_intptr_t
         case (WM_DESTROY)
             call PostQuitMessage(0_c_int)
         case default
@@ -536,6 +765,242 @@ contains
         end if
     end subroutine apply_default_font
 
+    function create_picture_control(parent, path, x, y, width, height) result(hwnd)
+        type(c_ptr), value :: parent
+        character(len=*), intent(in) :: path
+        integer(c_int), intent(in) :: x, y, width, height
+        type(c_ptr) :: hwnd
+        integer(c_int) :: style
+
+        hwnd = c_null_ptr
+        if (picture_slot_count >= max_picture_slots) return
+
+        style = ior(WS_CHILD, ior(WS_VISIBLE, SS_OWNERDRAW))
+        hwnd = CreateWindowExA(0_c_int, c_loc(static_class), c_null_ptr, style, x, y, width, height, &
+                               parent, int_to_ptr(0_c_intptr_t), h_instance, c_null_ptr)
+        if (.not. c_associated(hwnd)) return
+
+        picture_slot_count = picture_slot_count + 1
+        h_picture(picture_slot_count) = hwnd
+        picture_path(picture_slot_count) = path
+        call register_dynamic_control(hwnd)
+    end function create_picture_control
+
+    subroutine register_dynamic_control(hwnd)
+        type(c_ptr), value :: hwnd
+
+        if (dynamic_control_count >= max_dynamic_controls) return
+        dynamic_control_count = dynamic_control_count + 1
+        h_dynamic(dynamic_control_count) = hwnd
+    end subroutine register_dynamic_control
+
+    subroutine clear_dynamic_controls()
+        integer :: i
+        integer(c_int) :: ok
+
+        do i = 1, dynamic_control_count
+            if (c_associated(h_dynamic(i))) ok = DestroyWindow(h_dynamic(i))
+        end do
+        dynamic_control_count = 0
+        picture_slot_count = 0
+        h_picture = c_null_ptr
+        picture_path = ''
+    end subroutine clear_dynamic_controls
+
+    subroutine handle_draw_item(lparam)
+        integer(c_intptr_t), intent(in) :: lparam
+        type(DRAWITEMSTRUCT_T), pointer :: dis
+        integer :: slot
+
+        call c_f_pointer(int_to_ptr(lparam), dis)
+        slot = find_picture_slot(dis%hwnd_item)
+        if (slot > 0) then
+            call draw_picture_into_dc(dis%hdc, dis%rc_item, trim(picture_path(slot)))
+        end if
+    end subroutine handle_draw_item
+
+    function find_picture_slot(hwnd) result(slot)
+        type(c_ptr), intent(in) :: hwnd
+        integer :: slot
+        integer :: i
+
+        slot = 0
+        do i = 1, picture_slot_count
+            if (c_associated(h_picture(i), hwnd)) then
+                slot = i
+                return
+            end if
+        end do
+    end function find_picture_slot
+
+    subroutine draw_picture_into_dc(hdc, rc, path)
+        type(c_ptr), value :: hdc
+        type(RECT_T), intent(in) :: rc
+        character(len=*), intent(in) :: path
+        type(c_ptr) :: graphics, image, background_brush
+        integer(c_short), allocatable, target :: wide_path(:)
+        integer(c_int) :: status, img_w, img_h
+        integer(c_int) :: avail_w, avail_h, dest_w, dest_h, dest_x, dest_y
+        real :: scale, scale_w, scale_h
+
+        avail_w = int(rc%right - rc%left, c_int)
+        avail_h = int(rc%bottom - rc%top, c_int)
+        background_brush = CreateSolidBrush(int(Z'00FFFFFF', c_int))
+        status = FillRect(hdc, rc, background_brush)
+        status = DeleteObject(background_brush)
+        if (avail_w <= 0 .or. avail_h <= 0) return
+        if (.not. file_exists(path)) return
+
+        status = GdipCreateFromHDC(hdc, graphics)
+        if (status /= 0_c_int .or. .not. c_associated(graphics)) return
+
+        wide_path = to_wide_text(absolute_path(path))
+        status = GdipLoadImageFromFile(c_loc(wide_path), image)
+        if (status /= 0_c_int .or. .not. c_associated(image)) then
+            status = GdipDeleteGraphics(graphics)
+            return
+        end if
+
+        status = GdipGetImageWidth(image, img_w)
+        status = GdipGetImageHeight(image, img_h)
+        if (img_w > 0 .and. img_h > 0) then
+            scale_w = real(avail_w) / real(img_w)
+            scale_h = real(avail_h) / real(img_h)
+            scale = min(scale_w, scale_h)
+            dest_w = max(1, int(real(img_w) * scale))
+            dest_h = max(1, int(real(img_h) * scale))
+            dest_x = int(rc%left) + (avail_w - dest_w) / 2
+            dest_y = int(rc%top) + (avail_h - dest_h) / 2
+            status = GdipDrawImageRectI(graphics, image, dest_x, dest_y, dest_w, dest_h)
+        end if
+
+        status = GdipDisposeImage(image)
+        status = GdipDeleteGraphics(graphics)
+    end subroutine draw_picture_into_dc
+
+    function to_wide_text(text) result(wide)
+        character(len=*), intent(in) :: text
+        integer(c_short), allocatable :: wide(:)
+        integer :: i, n
+
+        n = len_trim(text)
+        allocate (wide(n + 1))
+        do i = 1, n
+            wide(i) = int(ichar(text(i:i)), c_short)
+        end do
+        wide(n + 1) = 0_c_short
+    end function to_wide_text
+
+    function create_table_control(parent, x, y, width, height) result(hwnd)
+        type(c_ptr), value :: parent
+        integer(c_int), intent(in) :: x, y, width, height
+        type(c_ptr) :: hwnd
+        integer(c_int) :: style
+        integer(c_intptr_t) :: ext_style
+
+        style = ior(WS_CHILD, ior(WS_VISIBLE, ior(LVS_REPORT, ior(LVS_SINGLESEL, LVS_SHOWSELALWAYS))))
+        hwnd = CreateWindowExA(WS_EX_CLIENTEDGE, c_loc(listview_class), c_null_ptr, style, x, y, width, height, &
+                               parent, int_to_ptr(0_c_intptr_t), h_instance, c_null_ptr)
+        if (c_associated(hwnd)) then
+            ext_style = int(ior(LVS_EX_FULLROWSELECT, LVS_EX_GRIDLINES), c_intptr_t)
+            call ignore_intptr(SendMessageA(hwnd, LVM_SETEXTENDEDLISTVIEWSTYLE, 0_c_intptr_t, ext_style))
+            call apply_default_font(hwnd)
+            call register_dynamic_control(hwnd)
+        end if
+    end function create_table_control
+
+    subroutine add_table_column(hwnd, index, header, width)
+        type(c_ptr), value :: hwnd
+        integer, intent(in) :: index
+        character(len=*), intent(in) :: header
+        integer(c_int), intent(in) :: width
+        type(LVCOLUMNA_T), target :: col
+        character(kind=c_char, len=:), allocatable, target :: c_header
+
+        c_header = to_c_text(header)
+        col%mask = ior(LVCF_TEXT, ior(LVCF_WIDTH, LVCF_SUBITEM))
+        col%fmt = LVCFMT_LEFT
+        col%cx = width
+        col%psz_text = c_loc(c_header)
+        col%cch_text_max = 0_c_int
+        col%i_sub_item = int(index, c_int)
+        col%i_image = 0_c_int
+        col%i_order = 0_c_int
+        call ignore_intptr( &
+            SendMessageA(hwnd, LVM_INSERTCOLUMNA, int(index, c_intptr_t), ptr_to_intptr(c_loc(col))))
+    end subroutine add_table_column
+
+    subroutine add_table_row(hwnd, row_index, values, n_values)
+        type(c_ptr), value :: hwnd
+        integer, intent(in) :: row_index
+        integer, intent(in) :: n_values
+        character(len=*), intent(in) :: values(n_values)
+        type(LVITEMA_T), target :: item
+        character(kind=c_char, len=:), allocatable, target :: c_text
+        integer :: col
+
+        c_text = to_c_text(trim(values(1)))
+        item%mask = LVIF_TEXT
+        item%i_item = int(row_index, c_int)
+        item%i_sub_item = 0_c_int
+        item%state = 0_c_int
+        item%state_mask = 0_c_int
+        item%psz_text = c_loc(c_text)
+        item%cch_text_max = 0_c_int
+        item%i_image = 0_c_int
+        item%l_param = 0_c_intptr_t
+        call ignore_intptr(SendMessageA(hwnd, LVM_INSERTITEMA, 0_c_intptr_t, ptr_to_intptr(c_loc(item))))
+
+        do col = 2, n_values
+            c_text = to_c_text(trim(values(col)))
+            item%i_sub_item = int(col - 1, c_int)
+            item%psz_text = c_loc(c_text)
+            call ignore_intptr( &
+                SendMessageA(hwnd, LVM_SETITEMTEXTA, int(row_index, c_intptr_t), ptr_to_intptr(c_loc(item))))
+        end do
+    end subroutine add_table_row
+
+    subroutine populate_table_from_csv(hwnd, path, max_rows, total_width)
+        type(c_ptr), value :: hwnd
+        character(len=*), intent(in) :: path
+        integer, intent(in) :: max_rows
+        integer(c_int), intent(in) :: total_width
+        character(len=line_len) :: line
+        character(len=field_len) :: fields(max_fields)
+        integer :: unit, ios, nfields, row_index, col
+        integer(c_int) :: col_width
+
+        if (.not. file_exists(path)) return
+        open (newunit=unit, file=path, status='old', action='read', iostat=ios)
+        if (ios /= 0) return
+
+        read (unit, '(a)', iostat=ios) line
+        if (ios /= 0) then
+            close (unit)
+            return
+        end if
+        call split_csv(line, fields, nfields)
+        if (nfields < 1) then
+            close (unit)
+            return
+        end if
+        col_width = max(70_c_int, int(total_width / int(nfields, c_int), c_int))
+        do col = 1, nfields
+            call add_table_column(hwnd, col - 1, trim(fields(col)), col_width)
+        end do
+
+        row_index = 0
+        do
+            read (unit, '(a)', iostat=ios) line
+            if (ios /= 0) exit
+            if (row_index >= max_rows) exit
+            call split_csv(line, fields, nfields)
+            if (nfields > 0) call add_table_row(hwnd, row_index, fields(1:nfields), nfields)
+            row_index = row_index + 1
+        end do
+        close (unit)
+    end subroutine populate_table_from_csv
+
     subroutine populate_navigation()
         integer :: i
         character(kind=c_char, len=:), allocatable, target :: item
@@ -562,12 +1027,184 @@ contains
     subroutine update_section(section_id)
         integer, intent(in) :: section_id
         character(len=:), allocatable :: text
+        integer(c_int) :: ok
 
         current_section = max(1, min(section_count, section_id))
-        text = build_section_text(current_section)
-        call set_multiline_text(h_view, text)
+        call clear_dynamic_controls()
+
+        select case (current_section)
+        case (2)
+            ok = ShowWindow(h_view, SW_HIDE)
+            call build_project1_section()
+        case (3)
+            ok = ShowWindow(h_view, SW_HIDE)
+            call build_project2_section()
+        case (4)
+            ok = ShowWindow(h_view, SW_HIDE)
+            call build_project3_section()
+        case (5)
+            ok = ShowWindow(h_view, SW_HIDE)
+            call build_project4_section()
+        case (7)
+            ok = ShowWindow(h_view, SW_HIDE)
+            call build_project5_section()
+        case default
+            ok = ShowWindow(h_view, SW_SHOW)
+            text = build_section_text(current_section)
+            call set_multiline_text(h_view, text)
+        end select
         call set_status('Loaded: '//trim(section_titles(current_section)))
     end subroutine update_section
+
+    subroutine build_project1_section()
+        type(c_ptr) :: table
+        integer(c_int) :: fig_w, fig_h, table_y, table_h
+
+        fig_w = (content_area_w - 12_c_int) / 2_c_int
+        fig_h = min(280_c_int, content_area_h * 4_c_int / 10_c_int)
+        table_y = content_area_y + fig_h + 12_c_int
+        table_h = max(120_c_int, content_area_h - fig_h - 12_c_int)
+
+        call ignore_ptr(create_picture_control(h_main, &
+            'outputs\project1_real_hydrogen\figures\radial_fields.png', &
+            content_area_x, content_area_y, fig_w, fig_h))
+        call ignore_ptr(create_picture_control(h_main, &
+            'outputs\project1_real_hydrogen\figures\axial_fields.png', &
+            content_area_x + fig_w + 12_c_int, content_area_y, fig_w, fig_h))
+
+        table = create_table_control(h_main, content_area_x, table_y, content_area_w, table_h)
+        if (c_associated(table)) then
+            call populate_table_from_csv( &
+                table, 'outputs\project1_real_hydrogen\tables\singh_model_error_summary.csv', &
+                50, content_area_w)
+        end if
+    end subroutine build_project1_section
+
+    subroutine build_project2_section()
+        type(c_ptr) :: table
+        integer(c_int) :: fig_w, fig_h, table_y, table_h
+
+        fig_w = (content_area_w - 12_c_int) / 2_c_int
+        fig_h = min(280_c_int, content_area_h * 4_c_int / 10_c_int)
+        table_y = content_area_y + fig_h + 12_c_int
+        table_h = max(120_c_int, content_area_h - fig_h - 12_c_int)
+
+        call ignore_ptr(create_picture_control(h_main, &
+            'outputs\project2_real_particles\figures\johansson_radius_sweep_1500K.png', &
+            content_area_x, content_area_y, fig_w, fig_h))
+        call ignore_ptr(create_picture_control(h_main, &
+            'outputs\project2_real_particles\figures\johansson_temperature_sweep_20um.png', &
+            content_area_x + fig_w + 12_c_int, content_area_y, fig_w, fig_h))
+
+        table = create_table_control(h_main, content_area_x, table_y, content_area_w, table_h)
+        if (c_associated(table)) then
+            call populate_table_from_csv( &
+                table, 'outputs\project2_real_particles\tables\johansson_correlation_parameters.csv', &
+                50, content_area_w)
+        end if
+    end subroutine build_project2_section
+
+    subroutine build_project3_section()
+        type(c_ptr) :: table
+        integer(c_int) :: fig_h, table_y, table_h
+
+        fig_h = min(320_c_int, content_area_h * 5_c_int / 10_c_int)
+        table_y = content_area_y + fig_h + 12_c_int
+        table_h = max(120_c_int, content_area_h - fig_h - 12_c_int)
+
+        call ignore_ptr(create_picture_control(h_main, &
+            'outputs\project3_real_dom\figures\published_field_dom_profiles.png', &
+            content_area_x, content_area_y, content_area_w, fig_h))
+
+        table = create_table_control(h_main, content_area_x, table_y, content_area_w, table_h)
+        if (c_associated(table)) then
+            call populate_table_from_csv( &
+                table, 'outputs\project3_real_dom\tables\radial_midline_dom_profile.csv', &
+                40, content_area_w)
+        end if
+    end subroutine build_project3_section
+
+    subroutine build_project4_section()
+        integer(c_int) :: tile_y, tile_w, tile_h, fig_y, fig_h
+        character(len=64) :: r2_text, rmse_text, mape_text, samples_text
+
+        tile_y = content_area_y
+        tile_h = 74_c_int
+        tile_w = (content_area_w - 3_c_int * 10_c_int) / 4_c_int
+        fig_y = tile_y + tile_h + 12_c_int
+        fig_h = max(150_c_int, content_area_h - tile_h - 12_c_int)
+
+        call read_surrogate_metrics(r2_text, rmse_text, mape_text, samples_text)
+        call ignore_ptr(create_stat_tile(h_main, 'R2 (log space)', trim(r2_text), &
+            content_area_x, tile_y, tile_w, tile_h))
+        call ignore_ptr(create_stat_tile(h_main, 'RMSE log10(kappa)', trim(rmse_text), &
+            content_area_x + (tile_w + 10_c_int), tile_y, tile_w, tile_h))
+        call ignore_ptr(create_stat_tile(h_main, 'MAPE(kappa)', trim(mape_text), &
+            content_area_x + 2_c_int * (tile_w + 10_c_int), tile_y, tile_w, tile_h))
+        call ignore_ptr(create_stat_tile(h_main, 'Train / test samples', trim(samples_text), &
+            content_area_x + 3_c_int * (tile_w + 10_c_int), tile_y, tile_w, tile_h))
+
+        call ignore_ptr(create_picture_control(h_main, &
+            'outputs\project4_real_surrogate\figures\surrogate_kappa_parity.png', &
+            content_area_x, fig_y, content_area_w, fig_h))
+    end subroutine build_project4_section
+
+    subroutine build_project5_section()
+        type(c_ptr) :: table
+
+        table = create_table_control(h_main, content_area_x, content_area_y, content_area_w, content_area_h)
+        if (c_associated(table)) then
+            call populate_table_from_csv( &
+                table, 'outputs\project5_radcal_asset\radcal_summary.csv', 50, content_area_w)
+        end if
+    end subroutine build_project5_section
+
+    subroutine read_surrogate_metrics(r2_text, rmse_text, mape_text, samples_text)
+        character(len=*), intent(out) :: r2_text, rmse_text, mape_text, samples_text
+        character(len=*), parameter :: path = 'outputs\project4_real_surrogate\tables\surrogate_metrics.csv'
+        character(len=line_len) :: line
+        character(len=field_len) :: fields(max_fields)
+        integer :: unit, ios, nfields
+
+        r2_text = 'not yet run'
+        rmse_text = 'n/a'
+        mape_text = 'n/a'
+        samples_text = 'n/a'
+        if (.not. file_exists(path)) return
+
+        open (newunit=unit, file=path, status='old', action='read', iostat=ios)
+        if (ios /= 0) return
+        read (unit, '(a)', iostat=ios) line
+        read (unit, '(a)', iostat=ios) line
+        close (unit)
+        if (ios /= 0) return
+
+        call split_csv(line, fields, nfields)
+        if (nfields >= 6) then
+            write (r2_text, '(f0.5)') parse_real(fields(4))
+            write (rmse_text, '(f0.5)') parse_real(fields(5))
+            write (mape_text, '(f0.2,a)') 100.0d0 * parse_real(fields(6)), '%'
+            samples_text = trim(fields(2))//' / '//trim(fields(3))
+        end if
+    end subroutine read_surrogate_metrics
+
+    function create_stat_tile(parent, label, value, x, y, width, height) result(hwnd)
+        type(c_ptr), value :: parent
+        character(len=*), intent(in) :: label, value
+        integer(c_int), intent(in) :: x, y, width, height
+        type(c_ptr) :: hwnd
+        integer(c_int) :: style
+        character(kind=c_char, len=:), allocatable, target :: c_text
+
+        style = ior(WS_CHILD, ior(WS_VISIBLE, ior(WS_BORDER, SS_CENTER)))
+        hwnd = CreateWindowExA(0_c_int, c_loc(static_class), c_null_ptr, style, x, y, width, height, &
+                               parent, int_to_ptr(0_c_intptr_t), h_instance, c_null_ptr)
+        if (.not. c_associated(hwnd)) return
+        call apply_default_font(hwnd)
+        c_text = to_c_windows_text(label//achar(10)//achar(10)//value)
+        call ignore_intptr(int(SetWindowTextA(hwnd, c_loc(c_text)), c_intptr_t))
+        call register_dynamic_control(hwnd)
+    end function create_stat_tile
 
     subroutine run_workflow(section_id)
         integer, intent(in) :: section_id
@@ -756,6 +1393,15 @@ contains
         ok = MoveWindow(h_nav, pad, content_top, nav_w, content_h, 1_c_int)
         ok = MoveWindow(h_view, view_x, content_top, view_w, content_h, 1_c_int)
         ok = MoveWindow(h_status, pad, bottom_top, width - 2_c_int * pad, 24_c_int, 1_c_int)
+
+        if (content_area_x /= view_x .or. content_area_y /= content_top .or. &
+            content_area_w /= view_w .or. content_area_h /= content_h) then
+            content_area_x = view_x
+            content_area_y = content_top
+            content_area_w = view_w
+            content_area_h = content_h
+            if (current_section /= 1 .and. current_section /= 6) call update_section(current_section)
+        end if
     end subroutine layout_controls
 
     function build_section_text(section_id) result(text)

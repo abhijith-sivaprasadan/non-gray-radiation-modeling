@@ -99,14 +99,20 @@ the referenced `E:\thermotwin-f` project: Fortran owns the dashboard state and r
 generated CSV artifacts directly. The build script also stages common gfortran runtime DLLs
 into both `build\` and the project root for easier transfer and double-click launching.
 
-The GUI is a workflow launcher and control panel, not the primary viewer:
+The GUI is both a workflow launcher and a native viewer in its own right, not just a
+launcher for the browser version. It uses a Common-Controls-v6 manifest (modern themed
+buttons/controls instead of classic beveled Win32), and Project 1-5's sections render the
+actual generated `matplotlib` PNG figures via GDI+ and the actual CSV data in native
+`SysListView32` grid tables (Project 4 also gets stat tiles) - not a text dump.
 
 - `Run All` regenerates every project output from inside the GUI.
-- `Run Selected` regenerates the selected project.
-- `Refresh` reloads the generated artifacts into the GUI's own text panel.
+- `Run Selected` regenerates the selected project and refreshes its charts/tables in place.
+- `Refresh` reloads the generated artifacts into the current section.
 - `Open Live` starts `scripts/dashboard_server.py` in the background (a no-op if it's
   already running) and opens the live interactive dashboard described above in your
-  browser.
+  browser - the two are complementary, not exclusive: the native GUI for a self-contained
+  desktop app with no server, the browser dashboard for real interactivity (hover tooltips,
+  sortable/filterable columns, a temperature selector for the particle sweeps).
 - `Export HTML` writes the portable single-file `outputs\dashboard.html` snapshot.
 - `Outputs` opens the generated outputs folder.
 
