@@ -1,0 +1,20 @@
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+data/raw/
+data/processed/
+*.pyc
+*.mod
+*.exe
+*.dll
+
+# Large downloaded release binaries (FDS/SMV/RADCAL installers); not source, not a repo.
+# See docs/fds_6110_release_install.md for how to (re)download these locally.
+/Assets from Github/

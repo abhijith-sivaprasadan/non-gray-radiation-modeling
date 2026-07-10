@@ -1,0 +1,24 @@
+[submodule "fds"]
+	path = fds
+	url = https://github.com/firemodels/fds.git
+[submodule "cfast"]
+	path = cfast
+	url = https://github.com/firemodels/cfast.git
+[submodule "smv"]
+	path = smv
+	url = https://github.com/firemodels/smv.git
+[submodule "fds-smv"]
+	path = fds-smv
+	url = https://github.com/firemodels/fds-smv.git
+[submodule "bot"]
+	path = bot
+	url = https://github.com/firemodels/bot.git
+[submodule "exp"]
+	path = exp
+	url = https://github.com/firemodels/exp.git
+[submodule "test_bundles"]
+	path = test_bundles
+	url = https://github.com/firemodels/test_bundles.git
+[submodule "radcal"]
+	path = radcal
+	url = https://github.com/firemodels/radcal.git
