@@ -63,6 +63,8 @@ module radiation_portfolio_win32_gui
     integer(c_int), parameter :: ID_RUN_SECTION = 206_c_int
     integer(c_int), parameter :: ID_OPEN_OUTPUTS = 207_c_int
 
+    character(len=*), parameter :: DASHBOARD_URL = 'http://127.0.0.1:8765/'
+
     character(kind=c_char, len=31), target, save :: class_name = &
         'RadiationPortfolioWin32Gui'//c_null_char
     character(kind=c_char, len=51), target, save :: app_title = &
@@ -308,6 +310,11 @@ module radiation_portfolio_win32_gui
             integer(c_int), value :: show_cmd
             integer(c_intptr_t) :: ret
         end function ShellExecuteA
+
+        subroutine Sleep(dw_milliseconds) bind(C, name='Sleep')
+            import :: c_int
+            integer(c_int), value :: dw_milliseconds
+        end subroutine Sleep
     end interface
 
 contains
@@ -426,7 +433,7 @@ contains
             case (ID_EXPORT)
                 call run_dashboard_build()
             case (ID_OPEN_HTML)
-                call open_path('outputs\dashboard.html')
+                call open_dashboard()
             case (ID_OPEN_OUTPUTS)
                 call open_path('outputs')
             case (ID_CLOSE)
@@ -479,7 +486,7 @@ contains
             button_style, 640_c_int, 16_c_int, 120_c_int, 32_c_int, parent, &
             int_to_ptr(int(ID_EXPORT, c_intptr_t)), h_instance, c_null_ptr)
 
-        h_open_html = CreateWindowExA(0_c_int, c_loc(button_class), c_string_ptr('Open HTML'), &
+        h_open_html = CreateWindowExA(0_c_int, c_loc(button_class), c_string_ptr('Open Live'), &
             button_style, 770_c_int, 16_c_int, 108_c_int, 32_c_int, parent, &
             int_to_ptr(int(ID_OPEN_HTML, c_intptr_t)), h_instance, c_null_ptr)
 
@@ -766,9 +773,12 @@ contains
             call add_line(text, '  Run All       - regenerates every project output and report.')
             call add_line(text, '  Run Selected  - regenerates the selected project section.')
             call add_line(text, '  Refresh       - reloads generated outputs into this view.')
-            call add_line(text, '  Export HTML   - builds outputs\dashboard.html: real figures, tables, and')
-            call add_line(text, '                  headline metrics from the generated CSV/PNG artifacts.')
-            call add_line(text, '  Open HTML     - opens that dashboard in your default browser.')
+            call add_line(text, '  Open Live     - starts the local dashboard server (if not already running)')
+            call add_line(text, '                  and opens the live, interactive app in your browser: real')
+            call add_line(text, '                  charts with hover tooltips, sortable/filterable tables, and')
+            call add_line(text, '                  Run All / Run Project buttons that re-run and auto-refresh.')
+            call add_line(text, '  Export HTML   - builds outputs\dashboard.html: a portable, offline, single-')
+            call add_line(text, '                  file snapshot of the same figures/tables for sharing.')
             call add_line(text, '  Outputs       - opens the outputs folder.')
             call add_line(text, '')
             call add_line(text, 'Source basis:')
@@ -1112,14 +1122,7 @@ contains
         character(len=:), allocatable :: absolute
         integer(c_intptr_t) :: result_code
 
-        if (.not. file_exists(path)) then
-            if (trim(path) == 'outputs\dashboard.html') then
-                call build_dashboard_via_python()
-            else if (index(path, '.html') > 0) then
-                call write_html_dashboard(path)
-            end if
-            if (trim(path) == 'outputs') call ensure_outputs_dir()
-        end if
+        if (.not. file_exists(path) .and. trim(path) == 'outputs') call ensure_outputs_dir()
         operation = to_c_text('open')
         absolute = absolute_path(path)
         file_name = to_c_text(absolute)
@@ -1129,6 +1132,39 @@ contains
             call show_info('Could not open '//trim(absolute), 'Fortran GUI')
         end if
     end subroutine open_path
+
+    subroutine open_url(url)
+        character(len=*), intent(in) :: url
+        character(kind=c_char, len=:), allocatable, target :: operation, target_url
+        integer(c_intptr_t) :: result_code
+
+        operation = to_c_text('open')
+        target_url = to_c_text(url)
+        result_code = ShellExecuteA(h_main, c_loc(operation), c_loc(target_url), &
+                                    c_null_ptr, c_null_ptr, SW_SHOWNORMAL)
+        if (result_code <= 32_c_intptr_t) then
+            call show_info('Could not open '//trim(url), 'Fortran GUI')
+        end if
+    end subroutine open_url
+
+    subroutine open_dashboard()
+        character(len=:), allocatable :: cmd
+        integer :: exitstat
+
+        call ensure_outputs_dir()
+        ! start /min launches a detached, minimized console; if the server is already
+        ! running on this port it fails fast (address already in use) and exits quietly -
+        ! see dashboard_server.py:main - so calling this unconditionally is safe. Output is
+        ! not redirected here: "start ... > file" does not reliably capture a detached
+        ! process's output, and this launch does not need to inspect it (unlike
+        ! build_dashboard_via_python, which runs synchronously and does redirect).
+        cmd = 'cmd /c "start /min python scripts\dashboard_server.py"'
+        call execute_command_line(cmd, wait=.false., exitstat=exitstat)
+        call set_status('Starting the live dashboard server (or reusing one already running) ...')
+        call Sleep(700_c_int)
+        call open_url(DASHBOARD_URL)
+        call set_status('Opened '//DASHBOARD_URL)
+    end subroutine open_dashboard
 
     function absolute_path(path) result(out)
         character(len=*), intent(in) :: path

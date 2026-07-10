@@ -1,6 +1,6 @@
 [project]
 name = "thermal-radiation-modeling"
-version = "0.1.0"
+version = "1.0.0"
 description = "Portfolio utilities for non-gray thermal radiation modeling."
 requires-python = ">=3.10"
 dependencies = [

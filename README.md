@@ -47,6 +47,39 @@ ruff check .
 black --check .
 ```
 
+## Live Interactive Dashboard
+
+The primary way to explore results is the live local web app:
+
+```powershell
+python scripts/dashboard_server.py
+```
+
+Then open the printed URL (`http://127.0.0.1:8765/`, override with the `DASHBOARD_PORT`
+env var). It is a dependency-free `http.server`-based app (no Flask/Node/build step) that
+serves a single-page app with:
+
+- Real interactive charts (hover tooltips, log/linear scales) for the particle-efficiency
+  sweeps, DOM heat-flux/source-term profiles, and the ML surrogate parity plot - not just
+  static images.
+- Sortable, filterable data tables for every generated CSV.
+- `Run all` / per-project re-run buttons that trigger the underlying Python workflow and
+  auto-refresh the page with the new results, so you don't need a terminal open.
+
+Project 1's 2-D field plots stay as embedded PNGs (they're `matplotlib` heatmaps, not
+re-implemented client-side). Everything is read fresh from `outputs/` on each request, so
+regenerating data outside the app (e.g. `python scripts/run_all.py`) and hitting Refresh
+picks it up immediately.
+
+For a portable, offline, single-file snapshot to share (e.g. by email, no server needed),
+use:
+
+```powershell
+python scripts/build_dashboard.py
+```
+
+which writes `outputs/dashboard.html` with the same figures/tables embedded as base64.
+
 ## Fortran UI and Windows GUI
 
 Build the Fortran dashboard executables:
@@ -66,13 +99,15 @@ the referenced `E:\thermotwin-f` project: Fortran owns the dashboard state and r
 generated CSV artifacts directly. The build script also stages common gfortran runtime DLLs
 into both `build\` and the project root for easier transfer and double-click launching.
 
-The GUI is now a workflow launcher, not just a viewer:
+The GUI is a workflow launcher and control panel, not the primary viewer:
 
 - `Run All` regenerates every project output from inside the GUI.
 - `Run Selected` regenerates the selected project.
-- `Refresh` reloads the generated artifacts.
-- `Export HTML` writes `outputs\fortran_gui_dashboard.html`.
-- `Open HTML` opens the exported report with an absolute Windows path.
+- `Refresh` reloads the generated artifacts into the GUI's own text panel.
+- `Open Live` starts `scripts/dashboard_server.py` in the background (a no-op if it's
+  already running) and opens the live interactive dashboard described above in your
+  browser.
+- `Export HTML` writes the portable single-file `outputs\dashboard.html` snapshot.
 - `Outputs` opens the generated outputs folder.
 
 Run the interactive terminal UI:
@@ -89,8 +124,8 @@ Non-interactive summary and HTML export:
 ```
 
 The terminal HTML dashboard is written to `outputs/fortran_dashboard.html`.
-The GUI export button writes `outputs/fortran_gui_dashboard.html`.
-For automated packaging checks, the GUI executable can also write the same export with:
+For automated packaging checks, the GUI executable can also build the portable dashboard
+snapshot non-interactively with:
 
 ```powershell
 .\radiation_portfolio_gui.exe --export-html
@@ -255,6 +290,11 @@ credentialed data that are not present in the workspace:
 - `scripts/run_radcal_asset.py` - RADCAL executable smoke-test workflow using downloaded
   Firemodels assets.
 - `scripts/run_project*_real_*.py` - real-data workflows.
+- `scripts/_dashboard_data.py` - shared JSON-serializable data loader consumed by both
+  dashboards below, so they never drift apart.
+- `scripts/dashboard_server.py`, `dashboard_app.py` - the live, interactive local dashboard
+  (stdlib-only HTTP server + single-page app).
+- `scripts/build_dashboard.py` - the portable, single-file `outputs/dashboard.html` export.
 - `docs/` - posting brief, derivation note, source map, FDS notes, and application checklist.
 - `docs/fds_clone_scan.md` - local scan of the cloned `firemodels/fds` tree and radiation hooks.
 - `outputs/` - generated reports, figures, and CSV tables.
