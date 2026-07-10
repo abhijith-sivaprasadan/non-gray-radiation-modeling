@@ -1,0 +1,5 @@
+case,rcfsk_4_transformed_percent,wsgg_percent,planck_mean_percent,note
+radial_source_peak_error,14.0,43.0,150.0,RCFSK reported below 14%; WSGG about 43%; Planck mean about 150%.
+axial_wall_flux_peak_error,7.0,,,RCFSK wall net heat-flux error remains within 7%.
+sandia_plume_side_wall_flux_peak_error,6.0,51.0,,2D decoupled Sandia plume comparison against LBL benchmark.
+sandia_plume_source_peak_error,15.0,35.0,,RCFSK about 15%; WSGG around 35%.

@@ -1,0 +1,8 @@
+metric,value
+case_line,CASEID: PORTFOLIO_RADCAL_SMOKE_TEST TITLE: PORTFOLIO_RADCAL_SMOKE_TEST
+path_length_m,0.317500000000000
+amean_cm-1,4.079920581588056E-003
+planck_mean_absorption_cm-1,9.468479800933764E-003
+total_emissivity,0.121498337094944
+received_flux_w_m2_str,1008.60961294082
+total_transmissivity,0.878725505720467

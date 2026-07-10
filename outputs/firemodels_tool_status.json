@@ -1,0 +1,151 @@
+{
+  "generated_at_utc": "2026-07-10T21:22:11+00:00",
+  "release": {
+    "name": "FDS-6.11.0_SMV-6.11.0",
+    "tag": "FDS-6.11.0",
+    "commit": "369a20b",
+    "release_date": "2026-05-18",
+    "release_url": "https://github.com/firemodels/fds/releases/tag/FDS-6.11.0",
+    "windows_installer": "FDS-6.11.0_SMV-6.11.0_win.exe",
+    "windows_installer_url": "https://github.com/firemodels/fds/releases/download/FDS-6.11.0/FDS-6.11.0_SMV-6.11.0_win.exe",
+    "windows_installer_size_mb": 174,
+    "windows_installer_sha256": "b42281eb73b92a948fe21e80b22089da99c50574103d17c4d4ff609290a0ddb2"
+  },
+  "tools": {
+    "FDS solver": {
+      "aliases": [
+        "fds.exe",
+        "fds"
+      ],
+      "path_matches": [
+        "C:\\Program Files\\firemodels\\FDS6\\bin\\fds.exe"
+      ],
+      "local_matches": [
+        "C:\\Program Files\\firemodels\\FDS6\\bin\\fds.exe"
+      ]
+    },
+    "Smokeview": {
+      "aliases": [
+        "smokeview.exe",
+        "smv.exe",
+        "smokeview",
+        "smv"
+      ],
+      "path_matches": [
+        "C:\\Program Files\\firemodels\\SMV6\\smokeview.exe"
+      ],
+      "local_matches": [
+        "C:\\Program Files\\firemodels\\SMV6\\smokeview.exe"
+      ]
+    },
+    "RADCAL": {
+      "aliases": [
+        "radcal.exe",
+        "radcal_win_64.exe",
+        "radcal"
+      ],
+      "path_matches": [],
+      "local_matches": [
+        "E:\\Thermal Radiation Modeling\\Assets from Github\\RADCAL\\radcal_win_64.exe"
+      ]
+    }
+  },
+  "installer_candidates": [
+    {
+      "path": "E:\\Thermal Radiation Modeling\\FDS-6.11.0_SMV-6.11.0_win.exe",
+      "exists": false,
+      "sha256": null,
+      "sha256_matches_release": false
+    },
+    {
+      "path": "E:\\Thermal Radiation Modeling\\Assets from Github\\FDS\\FDS-6.11.0_SMV-6.11.0_win.exe",
+      "exists": true,
+      "sha256": "b42281eb73b92a948fe21e80b22089da99c50574103d17c4d4ff609290a0ddb2",
+      "sha256_matches_release": true,
+      "size_bytes": 182431744
+    },
+    {
+      "path": "C:\\Users\\prasa\\Downloads\\FDS-6.11.0_SMV-6.11.0_win.exe",
+      "exists": false,
+      "sha256": null,
+      "sha256_matches_release": false
+    }
+  ],
+  "downloaded_assets": [
+    {
+      "label": "FDS/SMV Windows installer",
+      "role": "installer",
+      "path": "E:\\Thermal Radiation Modeling\\Assets from Github\\FDS\\FDS-6.11.0_SMV-6.11.0_win.exe",
+      "exists": true,
+      "sha256": "b42281eb73b92a948fe21e80b22089da99c50574103d17c4d4ff609290a0ddb2",
+      "sha256_matches_expected": true,
+      "size_bytes": 182431744
+    },
+    {
+      "label": "RADCAL Windows executable",
+      "role": "standalone_executable",
+      "path": "E:\\Thermal Radiation Modeling\\Assets from Github\\RADCAL\\radcal_win_64.exe",
+      "exists": true,
+      "sha256": "63adaacd4682e1b599df102aad3543d145c6209a03eb6ce0dfb3a539b8888766",
+      "sha256_matches_expected": null,
+      "size_bytes": 1507840
+    },
+    {
+      "label": "Smokeview Windows installer",
+      "role": "installer",
+      "path": "E:\\Thermal Radiation Modeling\\Assets from Github\\SmokeView\\SMV-6.11.1_win.exe",
+      "exists": true,
+      "sha256": "a5505933b709989f1d443eac53e84c40ca92418d432a64329615b2acfd4c1b48",
+      "sha256_matches_expected": null,
+      "size_bytes": 5271552
+    }
+  ],
+  "source_repositories": {
+    "fds": [
+      {
+        "path": "E:\\Thermal Radiation Modeling\\fds",
+        "exists": true,
+        "git_remote": "https://github.com/firemodels/fds.git"
+      }
+    ],
+    "smv": [
+      {
+        "path": "E:\\Thermal Radiation Modeling\\smv",
+        "exists": true,
+        "git_remote": "https://github.com/firemodels/smv.git"
+      }
+    ],
+    "radcal": [
+      {
+        "path": "E:\\Thermal Radiation Modeling\\radcal",
+        "exists": true,
+        "git_remote": "https://github.com/firemodels/radcal.git"
+      }
+    ],
+    "exp": [
+      {
+        "path": "E:\\Thermal Radiation Modeling\\exp",
+        "exists": true,
+        "git_remote": "https://github.com/firemodels/exp.git"
+      }
+    ],
+    "cfast": [
+      {
+        "path": "E:\\Thermal Radiation Modeling\\cfast",
+        "exists": true,
+        "git_remote": "https://github.com/firemodels/cfast.git"
+      }
+    ]
+  },
+  "ready_for_gui_launch": {
+    "fds": true,
+    "smokeview": true,
+    "radcal": false
+  },
+  "local_executable_assets": {
+    "radcal": true
+  },
+  "workflow_readiness": {
+    "radcal_asset_smoke_test": true
+  }
+}

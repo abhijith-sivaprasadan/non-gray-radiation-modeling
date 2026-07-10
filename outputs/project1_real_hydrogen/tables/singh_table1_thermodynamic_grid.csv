@@ -1,0 +1,5 @@
+quantity,range,interval
+Mole fraction of H2O,0.01-0.05,0.01
+Mole fraction of H2O,0.05-0.25,0.05
+Mole fraction of H2O,0.25-1.00,0.25
+Temperature (K),300-2400,100

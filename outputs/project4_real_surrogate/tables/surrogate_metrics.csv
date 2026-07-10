@@ -1,0 +1,2 @@
+target,train_samples,test_samples,r2_log_space,rmse_log10,mean_absolute_percentage_error_kappa
+log10(kappa_planck),4620,1540,0.9990704665629078,0.021615731236051556,0.03200631988328296

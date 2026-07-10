@@ -1,0 +1,4 @@
+wall_temperature_k,aed_planck_at_wall_temperature_percent,aed_planck_at_mean_temperature_percent,aef_planck_at_wall_temperature_percent,aef_planck_at_mean_temperature_percent
+500.0,11.7,10.3,5.34,5.04
+1000.0,11.3,12.7,6.01,5.95
+1400.0,15.0,15.1,3.01,3.0
