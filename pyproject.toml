@@ -1,0 +1,40 @@
+[project]
+name = "thermal-radiation-modeling"
+version = "0.1.0"
+description = "Portfolio utilities for non-gray thermal radiation modeling."
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.11",
+    "pandas>=2",
+    "matplotlib>=3.8",
+    "scikit-learn>=1.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "ruff>=0.6",
+    "black>=24",
+]
+notebooks = [
+    "jupyter>=1",
+    "miepython>=2",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.black]
+line-length = 100
+# Same scoping rationale as [tool.ruff] below: only format this portfolio's own code.
+extend-exclude = '^/(fds|cfast|smv|fds-smv|bot|exp|radcal|test_bundles|Assets from Github|build|fortran_ui)/'
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+# Scope to this portfolio's own code. The other top-level directories are vendored
+# firemodels/* git submodules (fds, cfast, smv, fds-smv, bot, exp, radcal, test_bundles) plus
+# downloaded binaries and build output, none of which are this repository's own source.
+include = ["src/**/*.py", "scripts/**/*.py", "tests/**/*.py"]
