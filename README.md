@@ -1,5 +1,11 @@
 # Thermal Radiation Modeling
 
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+![Tests](https://img.shields.io/badge/tests-64%20passing-brightgreen)
+![Platform](https://img.shields.io/badge/platform-Windows-lightgrey)
+![Style](https://img.shields.io/badge/style-black%20%2B%20ruff-000000)
+![Status](https://img.shields.io/badge/status-v1.0-informational)
+
 A non-gray thermal radiation modeling toolkit for fire/combustion applications: real
 equations, tables, and benchmark metrics extracted from published papers, a 1-D discrete-
 ordinates (DOM) radiative transfer solver, particle radiative-property correlations, a small
@@ -9,6 +15,57 @@ native Windows GUI.
 The project does not manufacture synthetic spectra or fabricate benchmark numbers. Every
 number quoted below is either a published, cited value or reproducibly computed by the
 scripts in this repository - see [External Data Boundary](#external-data-boundary).
+
+## Contents
+
+- [Screenshots](#screenshots)
+- [At a Glance](#at-a-glance)
+- [Source Basis](#source-basis)
+- [Quickstart](#quickstart)
+- [Live Interactive Dashboard](#live-interactive-dashboard)
+- [Native Windows GUI](#native-windows-gui)
+- [FDS/Smokeview Executable Status](#fdssmokeview-executable-status)
+- [Project 1: Published Hydrogen/H2O Radiation Data](#project-1-published-hydrogenh2o-radiation-data)
+- [Project 2: Published Particle Correlations](#project-2-published-particle-correlations)
+- [Project 3: DOM on Published Fields](#project-3-dom-on-published-fields)
+- [Project 4: ML Surrogate on Published Correlation](#project-4-ml-surrogate-on-published-correlation)
+- [Project 5: RADCAL Asset Smoke Test](#project-5-radcal-asset-smoke-test)
+- [Extensions: Own Data, Not Just Reproduction](#extensions-own-data-not-just-reproduction)
+- [External Data Boundary](#external-data-boundary)
+- [Vendored Firemodels Source](#vendored-firemodels-source)
+- [Repository Layout](#repository-layout)
+- [Testing Notes](#testing-notes)
+
+## Screenshots
+
+**Native Windows GUI** - Fortran/Win32, GDI+ figure rendering, native `SysListView32` data
+grids, Project 1's radial/axial field heatmaps and published model-error table shown here:
+
+![Native GUI showing Project 1 figures and data table](docs/images/gui_project1.png)
+
+**Live web dashboard** - dependency-free `http.server` SPA, dark theme, real interactive
+charts and sortable tables for all five projects:
+
+![Live dashboard overview with KPI tiles and Project 1 section](docs/images/dashboard_overview.png)
+
+## At a Glance
+
+| # | Project | Key result |
+| --- | --- | --- |
+| 1 | Hydrogen/H2O radiation (published) | RC-FSK radial peak error 14%, WSGG 43%, Planck-mean 150% |
+| 1x | Own HITRAN/HAPI Voigt fit | Independently fitted WSGG/Planck-mean vs. published: mean signed error +135.5%, growing with T (range-truncation bias, confirmed mechanism) |
+| 2 | Johansson particle correlations | Mie-fitted gray coal/char + ash1/ash2 absorption/scattering efficiencies, verified against `miepython` |
+| 2x | Extended Mie sweep (5-100 um) | Spectral Q_abs variation shrinks from ~40% (r=5 um) to ~10% (r=100 um) as particle size grows |
+| 3 | DOM on published fields | 1-D discrete-ordinates sweep of the radial/axial thermodynamic fields |
+| 3x | DOM scattering sensitivity | Isotropic-scattering solver vs. absorption-only: 0.07% mean heat-flux error at a representative dilute loading (single-scattering albedo 0.10) |
+| 4 | ML surrogate (published data) | R2 = 0.99907, RMSE(log10 kappa) = 0.0216, MAPE = 3.20% on 6160 points |
+| 4x | ML surrogate (own HITRAN data) | R2 = 0.977, MAPE = 13.6% on 42 self-generated points - a harder, honestly-reported problem |
+| 5 | RADCAL smoke test | Launch/parse smoke test of the downloaded RADCAL executable |
+| 5x | Real FDS verification run | `check_kappa.fds` via bundled Intel MPI `mpiexec`: methane kappa falls from 0.305 m^-1 (293 K) to 0.160 m^-1 (1093 K) |
+
+Every number above is computed by a script in this repository, not looked up or assumed - see
+[docs/research_synthesis.md](docs/research_synthesis.md) for how the projects and extensions
+connect, and each script's own generated report for full detail and disclosed boundaries.
 
 ## Source Basis
 
@@ -30,7 +87,7 @@ The implemented real-data fixtures come from:
 
 ```powershell
 python scripts/run_all.py        # regenerate every project's outputs
-python -m pytest -q              # 61 tests: physics self-consistency, regression pins, error paths
+python -m pytest -q              # 64 tests: physics self-consistency, regression pins, error paths
 ruff check .                     # scoped to src/scripts/tests, not the vendored submodules
 black --check .
 ```
