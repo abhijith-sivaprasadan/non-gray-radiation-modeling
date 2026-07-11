@@ -1,0 +1,950 @@
+
+ Fire Dynamics Simulator
+
+ Current Date     : July 11, 2026  22:19:09
+ Revision         : FDS-6.11.0-0-g369a20b-release
+ Revision Date    : Fri May 15 17:26:52 2026 -0400
+ Compiler         : Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.2.0 Build 20250605
+ Compilation Date : Sun-05/17/2026-11:24-PM
+
+ Number of MPI Processes:  1
+
+ MPI version: 4.1
+ MPI library version: Intel(R) MPI Library 2021.16 for Windows* OS
+
+ Hypre library version: v3.0.0
+ Sundials library version: v7.5.0
+
+ Job TITLE        : Check calculation of KAPPA
+ Job ID string    : check_kappa
+
+
+ Miscellaneous Parameters
+
+   Total Number of Grid Cells         900
+   Maximum Cell Aspect Ratio        3.000
+   Initial Time Step (s)            0.100
+   CFL Velocity Norm                    2
+   Simulation Start Time (s)          0.0
+   Simulation End Time (s)            0.2
+   Background Pressure (Pa)     101325.00
+   Ambient Temperature (C)          20.00
+
+   2D Cartesian
+   VLES Calculation
+   Eddy Viscosity Model:  Deardorff (C_DEARDORFF = 0.10)
+   Surface INERT Eddy Viscosity Model:  WALE (C_WALE = 0.60)
+   Turbulent Prandtl Number:         0.50
+   Turbulent Schmidt Number:         0.50
+
+
+ Pressure solver information
+
+   Solver:                            FFT
+   Velocity tolerance (m/s):    1.500E-01
+   Press eqn res tol (1/s^2):   2.222E+02
+   Max pressure iterations:            10
+
+
+ Mass Fraction Transformation Matrix to Convert Species Mixtures (Columns) to Primitive Species (Rows)
+
+                         AIR       METHANE   PRODUCTS
+   NITROGEN              0.990000  0.000000  0.987525
+   OXYGEN                0.010000  0.000000  0.000000
+   CARBON DIOXIDE        0.000000  0.000000  0.006860
+   WATER VAPOR           0.000000  0.000000  0.005616
+   CARBON MONOXIDE       0.000000  0.000000  0.000000
+   SOOT                  0.000000  0.000000  0.000000
+   HYDROGEN              0.000000  0.000000  0.000000
+   HYDROGEN CYANIDE      0.000000  0.000000  0.000000
+   METHANE               0.000000  1.000000  0.000000
+
+
+ Primitive Species Information
+
+   NITROGEN
+   Gas Species
+   Molecular Weight (g/mol)                28.01340
+   Ambient Density (kg/m^3)                1.165
+           Enthalpy of Formation (J/kg)  0.000E+00
+
+   OXYGEN
+   Gas Species
+   Molecular Weight (g/mol)                31.99880
+   Ambient Density (kg/m^3)                1.330
+           Enthalpy of Formation (J/kg)  0.000E+00
+
+   CARBON DIOXIDE
+   Gas Species
+   Molecular Weight (g/mol)                44.00950
+   Ambient Density (kg/m^3)                1.830
+           Enthalpy of Formation (J/kg) -8.941E+06
+
+   WATER VAPOR
+   Gas Species
+   Molecular Weight (g/mol)                18.01528
+   Ambient Density (kg/m^3)                0.749
+           Enthalpy of Formation (J/kg) -1.342E+07
+
+   CARBON MONOXIDE
+   Gas Species
+   Molecular Weight (g/mol)                28.01010
+   Ambient Density (kg/m^3)                1.164
+           Enthalpy of Formation (J/kg) -3.946E+06
+
+   SOOT
+   Gas Species
+   Molecular Weight (g/mol)                12.01070
+   Ambient Density (kg/m^3)                0.499
+           Enthalpy of Formation (J/kg)  0.000E+00
+
+   HYDROGEN
+   Gas Species
+   Molecular Weight (g/mol)                 2.01588
+   Ambient Density (kg/m^3)                0.084
+           Enthalpy of Formation (J/kg)  0.000E+00
+
+   HYDROGEN CYANIDE
+   Gas Species
+   Molecular Weight (g/mol)                27.02534
+   Ambient Density (kg/m^3)                1.123
+           Enthalpy of Formation (J/kg)  4.924E+06
+
+   METHANE
+   Gas Species
+   Molecular Weight (g/mol)                16.04246
+   Ambient Density (kg/m^3)                0.667
+           Enthalpy of Formation (J/kg) -4.650E+06
+
+
+ Tracked (Lumped) Species Information
+
+   AIR
+   Molecular Weight (g/mol)            28.04833
+   Ambient Density (kg/m^3)            1.166
+   Initial Mass Fraction               1.000
+   Enthalpy of Formation (J/kg)      0.000E+00
+
+   Sub Species                    Mass Fraction     Mole Fraction
+   NITROGEN                       9.900000E-01      9.912346E-01
+   OXYGEN                         1.000000E-02      8.765433E-03
+   CARBON DIOXIDE                 0.000000E+00      0.000000E+00
+   WATER VAPOR                    0.000000E+00      0.000000E+00
+ 
+     Viscosity (kg/m/s) Ambient,  293 K:  1.742E-05
+                                  500 K:  2.516E-05
+                                 1000 K:  3.956E-05
+                                 1500 K:  5.146E-05
+                                 2000 K:  6.202E-05
+   Therm. Cond. (W/m/K) Ambient,  293 K:  2.548E-02
+                                  500 K:  3.739E-02
+                                 1000 K:  6.499E-02
+                                 1500 K:  9.007E-02
+                                 2000 K:  1.121E-01
+        Enthalpy (J/kg) Ambient,  293 K: -5.192E+03
+                                  500 K:  2.108E+05
+                                 1000 K:  7.656E+05
+                                 1500 K:  1.370E+06
+                                 2000 K:  2.002E+06
+    Spec. Heat (J/kg/K) Ambient,  293 K:  1.038E+03
+                                  500 K:  1.055E+03
+                                 1000 K:  1.166E+03
+                                 1500 K:  1.243E+03
+                                 2000 K:  1.283E+03
+   Diff. Coeff. (m^2/s) Ambient,  293 K:  1.986E-05
+                                  500 K:  4.935E-05
+                                 1000 K:  1.569E-04
+                                 1500 K:  3.071E-04
+                                 2000 K:  4.945E-04
+     Gibbs Energy Amb. (kJ/mol),  293 K: -5.618E+01
+                                  500 K: -9.753E+01
+                                 1000 K: -2.068E+02
+                                 1500 K: -3.246E+02
+                                 2000 K: -4.483E+02
+
+   METHANE
+   Molecular Weight (g/mol)            16.04246
+   Ambient Density (kg/m^3)            0.667
+   Initial Mass Fraction               0.000
+   Enthalpy of Formation (J/kg)     -4.650E+06
+
+   Sub Species                    Mass Fraction     Mole Fraction
+   METHANE                        1.000000E+00      1.000000E+00
+ 
+     Viscosity (kg/m/s) Ambient,  293 K:  1.096E-05
+                                  500 K:  1.677E-05
+                                 1000 K:  2.728E-05
+                                 1500 K:  3.559E-05
+                                 2000 K:  4.290E-05
+   Therm. Cond. (W/m/K) Ambient,  293 K:  3.466E-02
+                                  500 K:  6.958E-02
+                                 1000 K:  1.790E-01
+                                 1500 K:  2.880E-01
+                                 2000 K:  3.876E-01
+        Enthalpy (J/kg) Ambient,  293 K: -4.661E+06
+                                  500 K: -4.137E+06
+                                 1000 K: -2.239E+06
+                                 1500 K:  3.482E+05
+                                 2000 K:  3.357E+06
+    Spec. Heat (J/kg/K) Ambient,  293 K:  2.213E+03
+                                  500 K:  2.904E+03
+                                 1000 K:  4.593E+03
+                                 1500 K:  5.664E+03
+                                 2000 K:  6.323E+03
+   Diff. Coeff. (m^2/s) Ambient,  293 K:  2.147E-05
+                                  500 K:  5.438E-05
+                                 1000 K:  1.750E-04
+                                 1500 K:  3.433E-04
+                                 2000 K:  5.530E-04
+     Gibbs Energy Amb. (kJ/mol),  293 K: -1.292E+02
+                                  500 K: -1.700E+02
+                                 1000 K: -2.842E+02
+                                 1500 K: -4.170E+02
+                                 2000 K: -5.650E+02
+
+   PRODUCTS
+   Molecular Weight (g/mol)            27.99595
+   Ambient Density (kg/m^3)            1.164
+   Initial Mass Fraction               0.000
+   Enthalpy of Formation (J/kg)     -1.367E+05
+
+   Sub Species                    Mass Fraction     Mole Fraction
+   NITROGEN                       9.875245E-01      9.869092E-01
+   CARBON DIOXIDE                 6.859547E-03      4.363592E-03
+   WATER VAPOR                    5.615909E-03      8.727184E-03
+   CARBON MONOXIDE                0.000000E+00      0.000000E+00
+   SOOT                           0.000000E+00      0.000000E+00
+   HYDROGEN CYANIDE               0.000000E+00      0.000000E+00
+ 
+     Viscosity (kg/m/s) Ambient,  293 K:  1.734E-05
+                                  500 K:  2.506E-05
+                                 1000 K:  3.946E-05
+                                 1500 K:  5.137E-05
+                                 2000 K:  6.193E-05
+   Therm. Cond. (W/m/K) Ambient,  293 K:  2.538E-02
+                                  500 K:  3.731E-02
+                                 1000 K:  6.503E-02
+                                 1500 K:  9.031E-02
+                                 2000 K:  1.125E-01
+        Enthalpy (J/kg) Ambient,  293 K: -1.419E+05
+                                  500 K:  7.510E+04
+                                 1000 K:  6.332E+05
+                                 1500 K:  1.242E+06
+                                 2000 K:  1.879E+06
+    Spec. Heat (J/kg/K) Ambient,  293 K:  1.043E+03
+                                  500 K:  1.061E+03
+                                 1000 K:  1.174E+03
+                                 1500 K:  1.252E+03
+                                 2000 K:  1.294E+03
+   Diff. Coeff. (m^2/s) Ambient,  293 K:  1.985E-05
+                                  500 K:  4.937E-05
+                                 1000 K:  1.570E-04
+                                 1500 K:  3.075E-04
+                                 2000 K:  4.953E-04
+     Gibbs Energy Amb. (kJ/mol),  293 K: -6.024E+01
+                                  500 K: -1.016E+02
+                                 1000 K: -2.110E+02
+                                 1500 K: -3.288E+02
+                                 2000 K: -4.527E+02
+
+
+ Gas Phase Reaction Information
+
+   Solver Details:  
+
+      ODE Solver:  EXPLICIT EULER
+
+      Fuel                                           Heat of Combustion (kJ/kg)
+      METHANE                                                        50027.3649
+      EPUMO2:                                                        12540.5015
+
+      Primitive Species Stoich. Coeff.
+      Species ID                                                          Molar
+      NITROGEN                                                        -0.000000
+      OXYGEN                                                          -2.000000
+      CARBON DIOXIDE                                                   1.000000
+      WATER VAPOR                                                      2.000000
+      METHANE                                                         -1.000000
+
+      Tracked (Lumped) Species Stoich. Coeff.
+      Species ID                                             Molar         Mass
+      AIR                                              -228.168991  -398.926349
+      METHANE                                            -1.000000    -1.000000
+      PRODUCTS                                          229.168991   399.926349
+
+      Reaction Kinetics
+
+      Fast chemistry
+
+      Extinction Model:  EXTINCTION 1
+      Auto-Ignition Temperature (C):            -273.1
+      Critical Flame Temperature (C):           1507.0
+
+      Prescribed Radiative Fraction:             0.200
+
+
+ Material Information
+
+
+ Surface Conditions
+
+   0 INERT (DEFAULT)
+
+   1 OPEN
+     Passive Vent to Atmosphere
+
+   2 MIRROR
+     Symmetry Plane
+
+   3 INTERPOLATED
+
+   4 PERIODIC
+
+   5 HVAC
+
+   6 MASSLESS TRACER
+
+   7 DROPLET
+
+   8 MASSLESS TARGET
+
+   9 PERIODIC FLOW ONLY
+
+
+ Lagrangian Particle Classes
+
+
+ Cut-off Density and Temperature
+
+    Minimum Temperature:  -259.1 C
+    Maximum Temperature:  2726.8 C
+    Minimum Density:  1.000E-02 kg/m3
+    Maximum Density:  1.000E+02 kg/m3
+
+
+ Slice File Information, Mesh     1
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh     2
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh     3
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh     4
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh     5
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh     6
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh     7
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh     8
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh     9
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    10
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    11
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    12
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    13
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    14
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    15
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    16
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    17
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    18
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    19
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    20
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    21
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    22
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    23
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    24
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    25
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    26
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    27
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    28
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    29
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    30
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    31
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    32
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    33
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    34
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    35
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    36
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    37
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    38
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    39
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    40
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    41
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    42
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    43
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    44
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    45
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    46
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    47
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    48
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    49
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    50
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    51
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    52
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    53
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    54
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    55
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    56
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    57
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    58
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    59
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    60
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    61
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    62
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    63
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    64
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    65
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    66
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    67
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    68
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    69
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    70
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    71
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    72
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    73
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    74
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    75
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    76
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    77
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    78
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    79
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    80
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    81
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    82
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    83
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    84
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    85
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    86
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    87
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    88
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    89
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    90
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    91
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    92
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    93
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    94
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    95
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    96
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    97
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    98
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh    99
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Slice File Information, Mesh   100
+
+   1 Nodes:   0   3   1   1   0   3, Quantity: ABSORPTION COEFFICIENT
+
+
+ Radiation Model Information
+
+   Number of control angles   60
+   Time step increment         1
+   Angle increment             1
+   Phi band   N_theta Solid angle
+     1:       60     0.209
+   Using gray gas absorption.
+   Mean beam length  1.000E-01 m
+
+
+ Pressure Zone Information
+
+   1 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 1, Indices: (3,1,3)
+   2 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 2, Indices: (3,1,3)
+   3 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 3, Indices: (3,1,3)
+   4 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 4, Indices: (3,1,3)
+   5 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 5, Indices: (3,1,3)
+   6 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 6, Indices: (3,1,3)
+   7 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 7, Indices: (3,1,3)
+   8 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 8, Indices: (3,1,3)
+   9 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 9, Indices: (3,1,3)
+   10 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 10, Indices: (3,1,3)
+   11 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 11, Indices: (3,1,3)
+   12 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 12, Indices: (3,1,3)
+   13 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 13, Indices: (3,1,3)
+   14 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 14, Indices: (3,1,3)
+   15 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 15, Indices: (3,1,3)
+   16 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 16, Indices: (3,1,3)
+   17 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 17, Indices: (3,1,3)
+   18 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 18, Indices: (3,1,3)
+   19 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 19, Indices: (3,1,3)
+   20 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 20, Indices: (3,1,3)
+   21 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 21, Indices: (3,1,3)
+   22 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 22, Indices: (3,1,3)
+   23 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 23, Indices: (3,1,3)
+   24 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 24, Indices: (3,1,3)
+   25 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 25, Indices: (3,1,3)
+   26 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 26, Indices: (3,1,3)
+   27 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 27, Indices: (3,1,3)
+   28 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 28, Indices: (3,1,3)
+   29 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 29, Indices: (3,1,3)
+   30 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 30, Indices: (3,1,3)
+   31 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 31, Indices: (3,1,3)
+   32 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 32, Indices: (3,1,3)
+   33 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 33, Indices: (3,1,3)
+   34 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 34, Indices: (3,1,3)
+   35 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 35, Indices: (3,1,3)
+   36 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 36, Indices: (3,1,3)
+   37 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 37, Indices: (3,1,3)
+   38 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 38, Indices: (3,1,3)
+   39 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 39, Indices: (3,1,3)
+   40 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 40, Indices: (3,1,3)
+   41 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 41, Indices: (3,1,3)
+   42 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 42, Indices: (3,1,3)
+   43 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 43, Indices: (3,1,3)
+   44 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 44, Indices: (3,1,3)
+   45 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 45, Indices: (3,1,3)
+   46 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 46, Indices: (3,1,3)
+   47 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 47, Indices: (3,1,3)
+   48 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 48, Indices: (3,1,3)
+   49 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 49, Indices: (3,1,3)
+   50 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 50, Indices: (3,1,3)
+   51 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 51, Indices: (3,1,3)
+   52 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 52, Indices: (3,1,3)
+   53 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 53, Indices: (3,1,3)
+   54 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 54, Indices: (3,1,3)
+   55 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 55, Indices: (3,1,3)
+   56 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 56, Indices: (3,1,3)
+   57 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 57, Indices: (3,1,3)
+   58 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 58, Indices: (3,1,3)
+   59 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 59, Indices: (3,1,3)
+   60 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 60, Indices: (3,1,3)
+   61 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 61, Indices: (3,1,3)
+   62 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 62, Indices: (3,1,3)
+   63 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 63, Indices: (3,1,3)
+   64 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 64, Indices: (3,1,3)
+   65 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 65, Indices: (3,1,3)
+   66 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 66, Indices: (3,1,3)
+   67 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 67, Indices: (3,1,3)
+   68 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 68, Indices: (3,1,3)
+   69 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 69, Indices: (3,1,3)
+   70 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 70, Indices: (3,1,3)
+   71 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 71, Indices: (3,1,3)
+   72 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 72, Indices: (3,1,3)
+   73 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 73, Indices: (3,1,3)
+   74 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 74, Indices: (3,1,3)
+   75 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 75, Indices: (3,1,3)
+   76 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 76, Indices: (3,1,3)
+   77 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 77, Indices: (3,1,3)
+   78 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 78, Indices: (3,1,3)
+   79 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 79, Indices: (3,1,3)
+   80 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 80, Indices: (3,1,3)
+   81 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 81, Indices: (3,1,3)
+   82 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 82, Indices: (3,1,3)
+   83 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 83, Indices: (3,1,3)
+   84 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 84, Indices: (3,1,3)
+   85 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 85, Indices: (3,1,3)
+   86 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 86, Indices: (3,1,3)
+   87 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 87, Indices: (3,1,3)
+   88 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 88, Indices: (3,1,3)
+   89 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 89, Indices: (3,1,3)
+   90 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 90, Indices: (3,1,3)
+   91 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 91, Indices: (3,1,3)
+   92 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 92, Indices: (3,1,3)
+   93 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 93, Indices: (3,1,3)
+   94 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 94, Indices: (3,1,3)
+   95 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 95, Indices: (3,1,3)
+   96 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 96, Indices: (3,1,3)
+   97 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 97, Indices: (3,1,3)
+   98 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 98, Indices: (3,1,3)
+   99 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 99, Indices: (3,1,3)
+   100 Volume: 8.1000E-02 m3, Cells: 9, Mesh: 100, Indices: (3,1,3)
+ 
+ 
+
+ Run Time Diagnostics
+
+ Time Step:       1, Simulation Time:   0.10000 s, Step Size: 0.100E+00 s, Pressure Iterations: 2
+ Time Step:       2, Simulation Time:   0.20000 s, Step Size: 0.100E+00 s, Pressure Iterations: 1
+
+
+ Time Stepping Wall Clock Time (s):        0.222
+ Total Elapsed Wall Clock Time (s):        2.754
+
+STOP: FDS completed successfully (CHID: check_kappa)

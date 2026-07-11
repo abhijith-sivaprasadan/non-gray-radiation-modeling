@@ -1,0 +1,220 @@
+ Enter Job ID string (CHID):
+ What type of file to parse?
+ PL3D file? Enter 1
+ SLCF file? Enter 2
+ BNDF file? Enter 3
+ Enter Sampling Factor for Data?
+ (1 for all data, 2 for every other point, etc.)
+ Domain selection:
+   y - domain size is limited
+   n - domain size is not limited
+   z - domain size is not limited and z levels are offset
+   ya, na or za - slice files are selected based on type and location.
+       The y, n, z prefix are defined as before.  
+ Enter starting and ending time for averaging (s)
+   1  ABSORPTION COEFFICIENT  check_kappa_1_1.sf
+  slice bounds:     0.00     0.90     0.10     0.10     0.00     0.90
+   2  ABSORPTION COEFFICIENT  check_kappa_2_1.sf
+  slice bounds:     1.00     1.90     0.10     0.10     0.00     0.90
+   3  ABSORPTION COEFFICIENT  check_kappa_3_1.sf
+  slice bounds:     2.00     2.90     0.10     0.10     0.00     0.90
+   4  ABSORPTION COEFFICIENT  check_kappa_4_1.sf
+  slice bounds:     3.00     3.90     0.10     0.10     0.00     0.90
+   5  ABSORPTION COEFFICIENT  check_kappa_5_1.sf
+  slice bounds:     4.00     4.90     0.10     0.10     0.00     0.90
+   6  ABSORPTION COEFFICIENT  check_kappa_6_1.sf
+  slice bounds:     5.00     5.90     0.10     0.10     0.00     0.90
+   7  ABSORPTION COEFFICIENT  check_kappa_7_1.sf
+  slice bounds:     6.00     6.90     0.10     0.10     0.00     0.90
+   8  ABSORPTION COEFFICIENT  check_kappa_8_1.sf
+  slice bounds:     7.00     7.90     0.10     0.10     0.00     0.90
+   9  ABSORPTION COEFFICIENT  check_kappa_9_1.sf
+  slice bounds:     8.00     8.90     0.10     0.10     0.00     0.90
+  10  ABSORPTION COEFFICIENT  check_kappa_10_1.sf
+  slice bounds:     9.00     9.90     0.10     0.10     0.00     0.90
+  11  ABSORPTION COEFFICIENT  check_kappa_11_1.sf
+  slice bounds:     0.00     0.90     0.10     0.10     1.00     1.90
+  12  ABSORPTION COEFFICIENT  check_kappa_12_1.sf
+  slice bounds:     1.00     1.90     0.10     0.10     1.00     1.90
+  13  ABSORPTION COEFFICIENT  check_kappa_13_1.sf
+  slice bounds:     2.00     2.90     0.10     0.10     1.00     1.90
+  14  ABSORPTION COEFFICIENT  check_kappa_14_1.sf
+  slice bounds:     3.00     3.90     0.10     0.10     1.00     1.90
+  15  ABSORPTION COEFFICIENT  check_kappa_15_1.sf
+  slice bounds:     4.00     4.90     0.10     0.10     1.00     1.90
+  16  ABSORPTION COEFFICIENT  check_kappa_16_1.sf
+  slice bounds:     5.00     5.90     0.10     0.10     1.00     1.90
+  17  ABSORPTION COEFFICIENT  check_kappa_17_1.sf
+  slice bounds:     6.00     6.90     0.10     0.10     1.00     1.90
+  18  ABSORPTION COEFFICIENT  check_kappa_18_1.sf
+  slice bounds:     7.00     7.90     0.10     0.10     1.00     1.90
+  19  ABSORPTION COEFFICIENT  check_kappa_19_1.sf
+  slice bounds:     8.00     8.90     0.10     0.10     1.00     1.90
+  20  ABSORPTION COEFFICIENT  check_kappa_20_1.sf
+  slice bounds:     9.00     9.90     0.10     0.10     1.00     1.90
+  21  ABSORPTION COEFFICIENT  check_kappa_21_1.sf
+  slice bounds:     0.00     0.90     0.10     0.10     2.00     2.90
+  22  ABSORPTION COEFFICIENT  check_kappa_22_1.sf
+  slice bounds:     1.00     1.90     0.10     0.10     2.00     2.90
+  23  ABSORPTION COEFFICIENT  check_kappa_23_1.sf
+  slice bounds:     2.00     2.90     0.10     0.10     2.00     2.90
+  24  ABSORPTION COEFFICIENT  check_kappa_24_1.sf
+  slice bounds:     3.00     3.90     0.10     0.10     2.00     2.90
+  25  ABSORPTION COEFFICIENT  check_kappa_25_1.sf
+  slice bounds:     4.00     4.90     0.10     0.10     2.00     2.90
+  26  ABSORPTION COEFFICIENT  check_kappa_26_1.sf
+  slice bounds:     5.00     5.90     0.10     0.10     2.00     2.90
+  27  ABSORPTION COEFFICIENT  check_kappa_27_1.sf
+  slice bounds:     6.00     6.90     0.10     0.10     2.00     2.90
+  28  ABSORPTION COEFFICIENT  check_kappa_28_1.sf
+  slice bounds:     7.00     7.90     0.10     0.10     2.00     2.90
+  29  ABSORPTION COEFFICIENT  check_kappa_29_1.sf
+  slice bounds:     8.00     8.90     0.10     0.10     2.00     2.90
+  30  ABSORPTION COEFFICIENT  check_kappa_30_1.sf
+  slice bounds:     9.00     9.90     0.10     0.10     2.00     2.90
+  31  ABSORPTION COEFFICIENT  check_kappa_31_1.sf
+  slice bounds:     0.00     0.90     0.10     0.10     3.00     3.90
+  32  ABSORPTION COEFFICIENT  check_kappa_32_1.sf
+  slice bounds:     1.00     1.90     0.10     0.10     3.00     3.90
+  33  ABSORPTION COEFFICIENT  check_kappa_33_1.sf
+  slice bounds:     2.00     2.90     0.10     0.10     3.00     3.90
+  34  ABSORPTION COEFFICIENT  check_kappa_34_1.sf
+  slice bounds:     3.00     3.90     0.10     0.10     3.00     3.90
+  35  ABSORPTION COEFFICIENT  check_kappa_35_1.sf
+  slice bounds:     4.00     4.90     0.10     0.10     3.00     3.90
+  36  ABSORPTION COEFFICIENT  check_kappa_36_1.sf
+  slice bounds:     5.00     5.90     0.10     0.10     3.00     3.90
+  37  ABSORPTION COEFFICIENT  check_kappa_37_1.sf
+  slice bounds:     6.00     6.90     0.10     0.10     3.00     3.90
+  38  ABSORPTION COEFFICIENT  check_kappa_38_1.sf
+  slice bounds:     7.00     7.90     0.10     0.10     3.00     3.90
+  39  ABSORPTION COEFFICIENT  check_kappa_39_1.sf
+  slice bounds:     8.00     8.90     0.10     0.10     3.00     3.90
+  40  ABSORPTION COEFFICIENT  check_kappa_40_1.sf
+  slice bounds:     9.00     9.90     0.10     0.10     3.00     3.90
+  41  ABSORPTION COEFFICIENT  check_kappa_41_1.sf
+  slice bounds:     0.00     0.90     0.10     0.10     4.00     4.90
+  42  ABSORPTION COEFFICIENT  check_kappa_42_1.sf
+  slice bounds:     1.00     1.90     0.10     0.10     4.00     4.90
+  43  ABSORPTION COEFFICIENT  check_kappa_43_1.sf
+  slice bounds:     2.00     2.90     0.10     0.10     4.00     4.90
+  44  ABSORPTION COEFFICIENT  check_kappa_44_1.sf
+  slice bounds:     3.00     3.90     0.10     0.10     4.00     4.90
+  45  ABSORPTION COEFFICIENT  check_kappa_45_1.sf
+  slice bounds:     4.00     4.90     0.10     0.10     4.00     4.90
+  46  ABSORPTION COEFFICIENT  check_kappa_46_1.sf
+  slice bounds:     5.00     5.90     0.10     0.10     4.00     4.90
+  47  ABSORPTION COEFFICIENT  check_kappa_47_1.sf
+  slice bounds:     6.00     6.90     0.10     0.10     4.00     4.90
+  48  ABSORPTION COEFFICIENT  check_kappa_48_1.sf
+  slice bounds:     7.00     7.90     0.10     0.10     4.00     4.90
+  49  ABSORPTION COEFFICIENT  check_kappa_49_1.sf
+  slice bounds:     8.00     8.90     0.10     0.10     4.00     4.90
+  50  ABSORPTION COEFFICIENT  check_kappa_50_1.sf
+  slice bounds:     9.00     9.90     0.10     0.10     4.00     4.90
+  51  ABSORPTION COEFFICIENT  check_kappa_51_1.sf
+  slice bounds:     0.00     0.90     0.10     0.10     5.00     5.90
+  52  ABSORPTION COEFFICIENT  check_kappa_52_1.sf
+  slice bounds:     1.00     1.90     0.10     0.10     5.00     5.90
+  53  ABSORPTION COEFFICIENT  check_kappa_53_1.sf
+  slice bounds:     2.00     2.90     0.10     0.10     5.00     5.90
+  54  ABSORPTION COEFFICIENT  check_kappa_54_1.sf
+  slice bounds:     3.00     3.90     0.10     0.10     5.00     5.90
+  55  ABSORPTION COEFFICIENT  check_kappa_55_1.sf
+  slice bounds:     4.00     4.90     0.10     0.10     5.00     5.90
+  56  ABSORPTION COEFFICIENT  check_kappa_56_1.sf
+  slice bounds:     5.00     5.90     0.10     0.10     5.00     5.90
+  57  ABSORPTION COEFFICIENT  check_kappa_57_1.sf
+  slice bounds:     6.00     6.90     0.10     0.10     5.00     5.90
+  58  ABSORPTION COEFFICIENT  check_kappa_58_1.sf
+  slice bounds:     7.00     7.90     0.10     0.10     5.00     5.90
+  59  ABSORPTION COEFFICIENT  check_kappa_59_1.sf
+  slice bounds:     8.00     8.90     0.10     0.10     5.00     5.90
+  60  ABSORPTION COEFFICIENT  check_kappa_60_1.sf
+  slice bounds:     9.00     9.90     0.10     0.10     5.00     5.90
+  61  ABSORPTION COEFFICIENT  check_kappa_61_1.sf
+  slice bounds:     0.00     0.90     0.10     0.10     6.00     6.90
+  62  ABSORPTION COEFFICIENT  check_kappa_62_1.sf
+  slice bounds:     1.00     1.90     0.10     0.10     6.00     6.90
+  63  ABSORPTION COEFFICIENT  check_kappa_63_1.sf
+  slice bounds:     2.00     2.90     0.10     0.10     6.00     6.90
+  64  ABSORPTION COEFFICIENT  check_kappa_64_1.sf
+  slice bounds:     3.00     3.90     0.10     0.10     6.00     6.90
+  65  ABSORPTION COEFFICIENT  check_kappa_65_1.sf
+  slice bounds:     4.00     4.90     0.10     0.10     6.00     6.90
+  66  ABSORPTION COEFFICIENT  check_kappa_66_1.sf
+  slice bounds:     5.00     5.90     0.10     0.10     6.00     6.90
+  67  ABSORPTION COEFFICIENT  check_kappa_67_1.sf
+  slice bounds:     6.00     6.90     0.10     0.10     6.00     6.90
+  68  ABSORPTION COEFFICIENT  check_kappa_68_1.sf
+  slice bounds:     7.00     7.90     0.10     0.10     6.00     6.90
+  69  ABSORPTION COEFFICIENT  check_kappa_69_1.sf
+  slice bounds:     8.00     8.90     0.10     0.10     6.00     6.90
+  70  ABSORPTION COEFFICIENT  check_kappa_70_1.sf
+  slice bounds:     9.00     9.90     0.10     0.10     6.00     6.90
+  71  ABSORPTION COEFFICIENT  check_kappa_71_1.sf
+  slice bounds:     0.00     0.90     0.10     0.10     7.00     7.90
+  72  ABSORPTION COEFFICIENT  check_kappa_72_1.sf
+  slice bounds:     1.00     1.90     0.10     0.10     7.00     7.90
+  73  ABSORPTION COEFFICIENT  check_kappa_73_1.sf
+  slice bounds:     2.00     2.90     0.10     0.10     7.00     7.90
+  74  ABSORPTION COEFFICIENT  check_kappa_74_1.sf
+  slice bounds:     3.00     3.90     0.10     0.10     7.00     7.90
+  75  ABSORPTION COEFFICIENT  check_kappa_75_1.sf
+  slice bounds:     4.00     4.90     0.10     0.10     7.00     7.90
+  76  ABSORPTION COEFFICIENT  check_kappa_76_1.sf
+  slice bounds:     5.00     5.90     0.10     0.10     7.00     7.90
+  77  ABSORPTION COEFFICIENT  check_kappa_77_1.sf
+  slice bounds:     6.00     6.90     0.10     0.10     7.00     7.90
+  78  ABSORPTION COEFFICIENT  check_kappa_78_1.sf
+  slice bounds:     7.00     7.90     0.10     0.10     7.00     7.90
+  79  ABSORPTION COEFFICIENT  check_kappa_79_1.sf
+  slice bounds:     8.00     8.90     0.10     0.10     7.00     7.90
+  80  ABSORPTION COEFFICIENT  check_kappa_80_1.sf
+  slice bounds:     9.00     9.90     0.10     0.10     7.00     7.90
+  81  ABSORPTION COEFFICIENT  check_kappa_81_1.sf
+  slice bounds:     0.00     0.90     0.10     0.10     8.00     8.90
+  82  ABSORPTION COEFFICIENT  check_kappa_82_1.sf
+  slice bounds:     1.00     1.90     0.10     0.10     8.00     8.90
+  83  ABSORPTION COEFFICIENT  check_kappa_83_1.sf
+  slice bounds:     2.00     2.90     0.10     0.10     8.00     8.90
+  84  ABSORPTION COEFFICIENT  check_kappa_84_1.sf
+  slice bounds:     3.00     3.90     0.10     0.10     8.00     8.90
+  85  ABSORPTION COEFFICIENT  check_kappa_85_1.sf
+  slice bounds:     4.00     4.90     0.10     0.10     8.00     8.90
+  86  ABSORPTION COEFFICIENT  check_kappa_86_1.sf
+  slice bounds:     5.00     5.90     0.10     0.10     8.00     8.90
+  87  ABSORPTION COEFFICIENT  check_kappa_87_1.sf
+  slice bounds:     6.00     6.90     0.10     0.10     8.00     8.90
+  88  ABSORPTION COEFFICIENT  check_kappa_88_1.sf
+  slice bounds:     7.00     7.90     0.10     0.10     8.00     8.90
+  89  ABSORPTION COEFFICIENT  check_kappa_89_1.sf
+  slice bounds:     8.00     8.90     0.10     0.10     8.00     8.90
+  90  ABSORPTION COEFFICIENT  check_kappa_90_1.sf
+  slice bounds:     9.00     9.90     0.10     0.10     8.00     8.90
+  91  ABSORPTION COEFFICIENT  check_kappa_91_1.sf
+  slice bounds:     0.00     0.90     0.10     0.10     9.00     9.90
+  92  ABSORPTION COEFFICIENT  check_kappa_92_1.sf
+  slice bounds:     1.00     1.90     0.10     0.10     9.00     9.90
+  93  ABSORPTION COEFFICIENT  check_kappa_93_1.sf
+  slice bounds:     2.00     2.90     0.10     0.10     9.00     9.90
+  94  ABSORPTION COEFFICIENT  check_kappa_94_1.sf
+  slice bounds:     3.00     3.90     0.10     0.10     9.00     9.90
+  95  ABSORPTION COEFFICIENT  check_kappa_95_1.sf
+  slice bounds:     4.00     4.90     0.10     0.10     9.00     9.90
+  96  ABSORPTION COEFFICIENT  check_kappa_96_1.sf
+  slice bounds:     5.00     5.90     0.10     0.10     9.00     9.90
+  97  ABSORPTION COEFFICIENT  check_kappa_97_1.sf
+  slice bounds:     6.00     6.90     0.10     0.10     9.00     9.90
+  98  ABSORPTION COEFFICIENT  check_kappa_98_1.sf
+  slice bounds:     7.00     7.90     0.10     0.10     9.00     9.90
+  99  ABSORPTION COEFFICIENT  check_kappa_99_1.sf
+  slice bounds:     8.00     8.90     0.10     0.10     9.00     9.90
+ 100  ABSORPTION COEFFICIENT  check_kappa_100_1.sf
+  slice bounds:     9.00     9.90     0.10     0.10     9.00     9.90
+How many variables to read:
+Enter index for variable 1
+Integral of  ABSORPTION COEFFICIENT =   2.4427E-01
+Enter output file name:
+ Writing to file...      kappa_slice_21
+Stop - Program terminated.

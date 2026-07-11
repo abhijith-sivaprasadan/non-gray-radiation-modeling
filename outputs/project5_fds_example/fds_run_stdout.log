@@ -1,0 +1,31 @@
+
+ Starting FDS ...
+
+ MPI Process      0 started on Abhijith
+
+ Reading FDS input file ...
+
+
+ Fire Dynamics Simulator
+
+ Current Date     : July 11, 2026  22:19:06
+ Revision         : FDS-6.11.0-0-g369a20b-release
+ Revision Date    : Fri May 15 17:26:52 2026 -0400
+ Compiler         : Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.2.0 Build 20250605
+ Compilation Date : Sun-05/17/2026-11:24-PM
+
+ Number of MPI Processes:  1
+
+ MPI version: 4.1
+ MPI library version: Intel(R) MPI Library 2021.16 for Windows* OS
+
+ Hypre library version: v3.0.0
+ Sundials library version: v7.5.0
+
+ Job TITLE        : Check calculation of KAPPA
+ Job ID string    : check_kappa
+
+ Time Step:       1, Simulation Time:   0.10000 s
+ Time Step:       2, Simulation Time:   0.20000 s
+
+STOP: FDS completed successfully (CHID: check_kappa)

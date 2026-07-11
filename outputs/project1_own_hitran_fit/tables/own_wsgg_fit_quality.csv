@@ -1,0 +1,2 @@
+gray_gas_count,polynomial_degree,mean_abs_error,max_abs_error,rms_error,optimizer_success
+2,2,0.0037213906885680877,0.012400042765940478,0.00534705601689222,True
