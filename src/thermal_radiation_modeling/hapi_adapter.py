@@ -8,7 +8,11 @@ errors.
 
 from __future__ import annotations
 
+import sys
 from dataclasses import dataclass
+from pathlib import Path
+
+VENDORED_HAPI_DIR = Path(__file__).resolve().parents[2] / "third_party" / "hapi"
 
 
 class HAPIUnavailableError(RuntimeError):
@@ -26,14 +30,17 @@ class HAPIFetchPlan:
 
 
 def require_hapi():
-    """Import and return HAPI, or raise a clear setup error."""
+    """Import and return HAPI (vendored under third_party/hapi/), or raise a clear setup error."""
 
+    if VENDORED_HAPI_DIR.is_dir() and str(VENDORED_HAPI_DIR) not in sys.path:
+        sys.path.insert(0, str(VENDORED_HAPI_DIR))
     try:
         import hapi  # type: ignore
     except ModuleNotFoundError as exc:
         raise HAPIUnavailableError(
-            "HAPI is not installed in this environment. Install hapi.py from HITRANonline "
-            "and configure your line-list access before running live fetches."
+            "HAPI is not available. Expected third_party/hapi/hapi.py (vendored from "
+            "https://hitran.org/static/hapi/hapi.py) or a hapi module importable some other "
+            "way; configure your line-list access before running live fetches."
         ) from exc
     return hapi
 
