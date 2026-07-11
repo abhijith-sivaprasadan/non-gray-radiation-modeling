@@ -18,3 +18,10 @@ data/processed/
 # Large downloaded release binaries (FDS/SMV/RADCAL installers); not source, not a repo.
 # See docs/fds_6110_release_install.md for how to (re)download these locally.
 /Assets from Github/
+
+# Binary FDS/Smokeview run artifacts (slice files, .smv scene files): not human-readable,
+# regenerable by re-running scripts/run_project5_fds_example.py.
+*.sf
+*.sf.bnd
+*.smv
+

@@ -269,6 +269,40 @@ runtime (`libiomp5md.dll`) via PATH or the `RADCAL_OPENMP_DLL_DIR` env var, prep
 folder to PATH only for the subprocess. It is a launch and parsing smoke test, not a
 validation claim.
 
+## Extensions: Own Data, Not Just Reproduction
+
+Projects 1-5 above reproduce or wrap published/downloaded results. These extension scripts
+compute something genuinely new instead - see `docs/research_synthesis.md` for how they tie
+together, and each script's own generated report for full numbers and disclosed boundaries.
+
+- **`python scripts/run_project1_own_hitran_fit.py`** - fetches real H2O line-by-line data
+  from HITRAN via HAPI (vendored in `third_party/hapi/`), computes a Voigt-profile
+  absorption coefficient, and fits an independent Planck-mean correlation and WSGG model
+  from that spectrum, checked against Project 1's published values (not looked up).
+  Real network requests to hitran.org; takes several minutes (~13 s per grid point).
+  Outputs in `outputs/project1_own_hitran_fit/`.
+- **`python scripts/run_project2_extended_mie_sweep.py`** - the same validated Mie solver,
+  spectrally resolved at particle sizes representative of wildland fuel char fragments
+  (5-100 um), quantifying how much gray particle correlations lose at these sizes. Outputs
+  in `outputs/project2_extended_mie_sweep/`.
+- **`python scripts/run_project3_scattering_sensitivity.py`** - adds a real isotropic-
+  scattering DOM solver (`dom1d.solve_gray_dom_with_isotropic_scattering`) and measures the
+  actual heat-flux difference against the existing absorption-only solver for a
+  representative particle loading. Outputs in `outputs/project3_scattering_sensitivity/`.
+- **`python scripts/run_project4_own_data_surrogate.py`** - trains Project 4's surrogate
+  architecture on Project 1's own-HITRAN-fit data instead of the published correlation
+  (run that script first). Outputs in `outputs/project4_own_data_surrogate/`.
+- **`python scripts/run_project5_fds_example.py`** - runs a real FDS verification case
+  (`fds/Verification/Radiation/check_kappa.fds`) with the actual FDS-6.11.0 executable and
+  extracts real values via the bundled `fds2ascii` tool. Requires FDS on PATH (see
+  [FDS/Smokeview Executable Status](#fdssmokeview-executable-status)); on Windows, `fds.exe`
+  must be launched through its bundled Intel MPI `mpiexec`, not called directly - see the
+  script for the exact invocation. Outputs in `outputs/project5_fds_example/`.
+
+These are not wired into `scripts/run_all.py` (unlike Projects 1-4): they need network
+access, an installed FDS, or another extension's output first, so `run_all.py` stays fast,
+offline, and dependency-free.
+
 ## External Data Boundary
 
 This repository does not manufacture spectra, and does not include proprietary or
@@ -292,29 +326,42 @@ reference source trees for cross-checking implementation direction, not code thi
 owns or modifies. Clone with `git clone --recurse-submodules`, or run
 `git submodule update --init` after a plain clone.
 
+`third_party/hapi/hapi.py` is a vendored (not a submodule - it's a single file, not a git
+repository), unmodified copy of the official HITRAN Application Programming Interface
+(MIT license) - see `third_party/hapi/README.md` for its source and version.
+
 ## Repository Layout
 
 - `src/thermal_radiation_modeling/published_data.py` - paper-extracted equations, tables,
   and metrics.
 - `src/thermal_radiation_modeling/particles.py` - Rayleigh/Mie helpers plus Johansson
   published particle correlations.
-- `src/thermal_radiation_modeling/dom1d.py` - 1-D DOM solver, including a WSGG-coupled sweep
-  (`solve_wsgg_dom`) that sums per-gray-gas DOM solves weighted by a `WSGGModel`.
+- `src/thermal_radiation_modeling/dom1d.py` - 1-D DOM solver: pure-absorption
+  (`solve_pure_absorption_dom`), WSGG-coupled (`solve_wsgg_dom`, sums per-gray-gas DOM
+  solves weighted by a `WSGGModel`), and isotropic-scattering
+  (`solve_gray_dom_with_isotropic_scattering`, classical source iteration).
 - `src/thermal_radiation_modeling/wsgg.py`, `fitting.py`, `io.py` - a general WSGG toolkit
   (model evaluation, penalized least-squares coefficient fitting, and CSV round-tripping),
-  covered by unit tests but not yet wired into a numbered project: fitting a WSGG model
-  needs a real target emissivity table (e.g. an HITEMP-derived RCFSK/WSGG grid), and this
-  repository does not fabricate one. This toolkit is held ready for that step once the
-  HAPI/HITEMP extension in `hapi_adapter.py` is configured.
+  exercised end-to-end by `scripts/run_project1_own_hitran_fit.py` against a real,
+  self-computed target emissivity table (not a fabricated one).
 - `src/thermal_radiation_modeling/surrogate.py` - MLP surrogate training helper, used by
-  Project 4.
-- `src/thermal_radiation_modeling/hapi_adapter.py` - explicit HAPI/HITEMP extension hooks.
+  Project 4 and its own-data extension.
+- `src/thermal_radiation_modeling/hapi_adapter.py` - imports the vendored HAPI (see above);
+  raises a clear error rather than fabricating data if it's missing.
+- `src/thermal_radiation_modeling/own_hitran_fit.py` - real HITRAN fetch, Voigt-profile
+  absorption coefficient, and Planck-mean/emissivity reduction for
+  `run_project1_own_hitran_fit.py`.
 - `fortran_ui/radiation_portfolio_ui.f90` - Fortran terminal and HTML dashboard.
 - `fortran_ui/radiation_portfolio_gui.f90` - native Windows Fortran/Win32 GUI dashboard.
 - `fortran_ui/app.manifest`, `app.rc` - Common-Controls-v6 manifest resource for the GUI.
 - `scripts/run_radcal_asset.py` - RADCAL executable smoke-test workflow using downloaded
   Firemodels assets.
-- `scripts/run_project*_real_*.py` - real-data workflows.
+- `scripts/run_project*_real_*.py` - the five numbered real-data workflows.
+- `scripts/run_project1_own_hitran_fit.py`, `run_project2_extended_mie_sweep.py`,
+  `run_project3_scattering_sensitivity.py`, `run_project4_own_data_surrogate.py`,
+  `run_project5_fds_example.py` - the extension workflows; see
+  [Extensions](#extensions-own-data-not-just-reproduction) above and
+  `docs/research_synthesis.md`.
 - `scripts/_report_utils.py` - shared output-directory/report-writing helpers for the
   `run_project*` scripts.
 - `scripts/_dashboard_data.py` - shared JSON-serializable data loader consumed by both
@@ -324,10 +371,13 @@ owns or modifies. Clone with `git clone --recurse-submodules`, or run
 - `scripts/build_dashboard.py` - the portable, single-file `outputs/dashboard.html` export.
 - `scripts/check_firemodels_tools.py` - detects installed FDS/Smokeview/RADCAL executables
   and downloaded release assets.
-- `docs/` - derivation notes, source maps, annotated bibliography, and FDS integration notes.
+- `docs/derivation_note.md` - the physics/math behind every model in this repository,
+  including the own-HITRAN-fit's confirmed error mechanism and the DOM scattering gap.
+- `docs/research_synthesis.md` - how the six extension scripts connect to each other.
 - `docs/fds_clone_scan.md` - local scan of the cloned `firemodels/fds` tree and radiation hooks.
 - `outputs/` - generated reports, figures, and CSV tables (tracked in git as the
-  demonstrated results; regenerate anytime with `python scripts/run_all.py`).
+  demonstrated results; regenerate anytime with `python scripts/run_all.py`, plus the
+  extension scripts above for their own outputs).
 - `tests/` - unit tests, physics self-consistency checks, regression pins for the published
   benchmark numbers, and error-path coverage for the `ValueError` guards throughout `src/`.
 

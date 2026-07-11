@@ -159,3 +159,49 @@ form:
 
 with `y0`, `y_inf`, and `z` taken from Johansson Tables 1-2. This replaces the earlier
 placeholder refractive-index curve.
+
+## Own HITRAN Fit (Project 1 Extension)
+
+`scripts/run_project1_own_hitran_fit.py` computes an H2O Planck-mean correlation and WSGG
+model independently of the published lookup above: real line-by-line data fetched from
+HITRAN via HAPI (`third_party/hapi/`), a Voigt-profile absorption coefficient
+(`hapi.absorptionCoefficient_Voigt`), and the same Planck-mean/total-emissivity reduction
+(`lbl.planck_mean_absorption`, `lbl.total_emissivity_from_spectrum`) used elsewhere in this
+repository.
+
+Two boundaries versus Singh & Hostikka's published correlation, and they pull in *opposite*
+directions:
+
+1. HAPI's interactive `fetch()` only reaches the standard HITRAN database, not HITEMP (the
+   paper's source, distributed as large static archive files impractical to fetch here).
+   HITRAN omits weak hot lines HITEMP includes, so this should **under-predict** absorption,
+   worsening at higher temperature.
+2. The wavenumber range is bounded to H2O's two strongest IR bands (the pure rotational band
+   and the 6.3 um fundamental), not the paper's full ~150-6500 cm^-1 coverage, for
+   tractability (~13 s per line-by-line evaluation at the full range and 0.05 cm^-1
+   resolution). Concentrating the Planck-weighted average on only the strongest-absorbing
+   bands, instead of the much wider range the paper averages over (most of which absorbs
+   more weakly), should make this **over-predict**.
+
+Which effect dominates is empirical, not assumed - and the full 42-point (T, X_H2O) grid in
+`outputs/project1_own_hitran_fit/` settled it: **boundary 2 dominates across the entire
+grid**, and the size of that dominance *grows* with temperature rather than shrinking. Mean
+signed relative error +135.5% (over-prediction), correlation of error against T: +0.95. The
+mechanism is Wien's law: as T rises, the blackbody weighting shifts toward higher
+wavenumber, moving progressively more of the published, full-range average into the near-IR
+combination/overtone bands above 2200 cm^-1 that this repository's own fit excludes
+entirely. Those excluded bands absorb more weakly than the two strong bands kept here, so
+the published average is increasingly pulled down by them as T rises, while the own
+average - concentrated on only the strong bands - is not. Boundary 1 (HITRAN's missing hot
+lines) is real but evidently smaller than this effect throughout the grid; it would show up
+as the over-prediction *shrinking* at high T, which is the opposite of what was observed.
+
+The exponent B in `kappa_planck = X_H2O * A * T^B`, fit to the own grid, is -1.31 versus the
+published -1.98 - both negative (Planck-mean absorption falls with temperature in both), but
+the own fit falls off more slowly, consistent with the same mechanism: the own fit is
+increasingly blind to the weaker high-wavenumber absorption that pulls the published
+correlation down faster as T rises. The own-fitted 2-gray-gas WSGG model (fit to a separate,
+fixed-X_H2O, varying-path-length emissivity grid from the same LBL spectra) matches its own
+target data well - mean absolute emissivity error 0.0037 - which says the WSGG toolkit and
+fitting procedure work correctly; it says nothing about matching the published correlation,
+which is a different exercise entirely (see above).

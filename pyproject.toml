@@ -29,7 +29,7 @@ testpaths = ["tests"]
 [tool.black]
 line-length = 100
 # Same scoping rationale as [tool.ruff] below: only format this portfolio's own code.
-extend-exclude = '^/(fds|cfast|smv|fds-smv|bot|exp|radcal|test_bundles|Assets from Github|build|fortran_ui)/'
+extend-exclude = '^/(fds|cfast|smv|fds-smv|bot|exp|radcal|test_bundles|Assets from Github|build|fortran_ui|third_party)/'
 
 [tool.ruff]
 line-length = 100
