@@ -3,6 +3,7 @@ import pytest
 
 from thermal_radiation_modeling.constants import STEFAN_BOLTZMANN
 from thermal_radiation_modeling.dom1d import (
+    solve_gray_dom_with_isotropic_scattering,
     solve_pure_absorption_dom,
     solve_spectral_pure_absorption_dom,
     solve_wsgg_dom,
@@ -175,3 +176,46 @@ def test_solve_spectral_pure_absorption_dom_rejects_kappa_shape_mismatch() -> No
         solve_spectral_pure_absorption_dom(
             x, np.full_like(x, 1000.0), eta, np.zeros((eta.size, x.size + 1))
         )
+
+
+def test_scattering_solver_matches_pure_absorption_at_zero_scattering() -> None:
+    x = np.linspace(0.0, 1.0, 20)
+    temperature = np.linspace(500.0, 1500.0, 20)
+    pure = solve_pure_absorption_dom(x, temperature, 2.0, quadrature_order=8)
+
+    blackbody = STEFAN_BOLTZMANN * temperature**4 / np.pi
+    left_i = STEFAN_BOLTZMANN * temperature[0] ** 4 / np.pi
+    right_i = STEFAN_BOLTZMANN * temperature[-1] ** 4 / np.pi
+    scattering = solve_gray_dom_with_isotropic_scattering(
+        x, 2.0, 0.0, blackbody, left_i, right_i, quadrature_order=8
+    )
+
+    assert np.allclose(pure.heat_flux, scattering.heat_flux, rtol=1e-6)
+    assert np.allclose(pure.source_term, scattering.source_term, rtol=1e-6)
+
+
+def test_scattering_reduces_net_flux_between_black_walls() -> None:
+    x = np.linspace(0.0, 1.0, 40)
+    temperature = np.full_like(x, 500.0)
+    blackbody = STEFAN_BOLTZMANN * temperature**4 / np.pi
+    left_wall_t, right_wall_t = 1000.0, 500.0
+    left_i = STEFAN_BOLTZMANN * left_wall_t**4 / np.pi
+    right_i = STEFAN_BOLTZMANN * right_wall_t**4 / np.pi
+    vacuum_flux = STEFAN_BOLTZMANN * (left_wall_t**4 - right_wall_t**4)
+
+    low_scatter = solve_gray_dom_with_isotropic_scattering(x, 0.0, 0.5, blackbody, left_i, right_i)
+    high_scatter = solve_gray_dom_with_isotropic_scattering(x, 0.0, 2.0, blackbody, left_i, right_i)
+
+    # More scattering optical thickness impedes net transfer between the walls, and a purely
+    # scattering (non-absorbing) medium has no true local energy source.
+    assert np.mean(low_scatter.heat_flux) < vacuum_flux
+    assert np.mean(high_scatter.heat_flux) < np.mean(low_scatter.heat_flux)
+    assert np.allclose(low_scatter.source_term, 0.0, atol=1e-6)
+    assert np.allclose(high_scatter.source_term, 0.0, atol=1e-6)
+
+
+def test_scattering_solver_rejects_negative_scattering_coefficient() -> None:
+    x = np.linspace(0.0, 1.0, 10)
+    blackbody = np.full_like(x, 1000.0)
+    with pytest.raises(ValueError, match="non-negative"):
+        solve_gray_dom_with_isotropic_scattering(x, 1.0, -1.0, blackbody, 1000.0, 1000.0)

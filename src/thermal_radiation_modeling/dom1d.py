@@ -155,6 +155,84 @@ def solve_gray_dom_with_source(
     )
 
 
+def solve_gray_dom_with_isotropic_scattering(
+    x_m: np.ndarray,
+    absorption_coefficient_m: np.ndarray | float,
+    scattering_coefficient_m: np.ndarray | float,
+    blackbody_source_intensity: np.ndarray,
+    left_boundary_intensity: float,
+    right_boundary_intensity: float,
+    quadrature_order: int = 8,
+    max_iterations: int = 100,
+    tolerance: float = 1e-5,
+) -> DOMResult:
+    """Solve a gray DOM problem with absorption, emission, *and* isotropic scattering.
+
+    This is the counterpart to :func:`solve_gray_dom_with_source` (which has no scattering
+    term at all - see the module-level caveat on ``solve_wsgg_dom``) and to
+    ``docs/derivation_note.md``'s documented DOM scattering limitation.
+
+    Uses classical source iteration: at each outer iteration, the scattering-in term is
+    treated as an additional isotropic source proportional to the *previous* iteration's
+    incident radiation G, and the combined absorption+scattering+emission problem is solved
+    with total extinction ``beta = kappa + sigma_s`` via a call to
+    :func:`solve_gray_dom_with_source`. Iterates until the relative change in G falls below
+    ``tolerance`` or ``max_iterations`` is reached. The returned ``source_term`` uses only
+    the true absorption coefficient (scattering redistributes energy directionally but does
+    not create or destroy it, so it must not appear in the local energy-source term).
+    """
+
+    x = np.asarray(x_m, dtype=float)
+    kappa = np.broadcast_to(np.asarray(absorption_coefficient_m, dtype=float), x.shape)
+    sigma = np.broadcast_to(np.asarray(scattering_coefficient_m, dtype=float), x.shape)
+    if np.any(kappa < 0) or np.any(sigma < 0):
+        raise ValueError(
+            "absorption_coefficient_m and scattering_coefficient_m must be non-negative"
+        )
+    blackbody = np.asarray(blackbody_source_intensity, dtype=float)
+    if blackbody.shape != x.shape:
+        raise ValueError("blackbody_source_intensity must have the same shape as x_m")
+
+    beta = kappa + sigma
+    safe_beta = np.where(beta > 0, beta, 1.0)
+    incident_radiation = np.zeros_like(x)
+    result = None
+    for _ in range(max_iterations):
+        effective_source = np.where(
+            beta > 0,
+            (kappa * blackbody + (sigma / (4.0 * np.pi)) * incident_radiation) / safe_beta,
+            blackbody,
+        )
+        result = solve_gray_dom_with_source(
+            x,
+            beta,
+            effective_source,
+            left_boundary_intensity,
+            right_boundary_intensity,
+            quadrature_order,
+        )
+        new_incident = result.incident_radiation
+        denom = np.max(np.abs(new_incident))
+        change = (
+            float(np.max(np.abs(new_incident - incident_radiation)) / denom) if denom > 0 else 0.0
+        )
+        incident_radiation = new_incident
+        if change < tolerance:
+            break
+
+    assert result is not None
+    true_source_term = kappa * (4.0 * np.pi * blackbody - incident_radiation)
+    return DOMResult(
+        x_m=x,
+        direction_cosines=result.direction_cosines,
+        quadrature_weights=result.quadrature_weights,
+        intensity=result.intensity,
+        incident_radiation=incident_radiation,
+        heat_flux=result.heat_flux,
+        source_term=true_source_term,
+    )
+
+
 def solve_wsgg_dom(
     x_m: np.ndarray,
     temperature_k: np.ndarray,
