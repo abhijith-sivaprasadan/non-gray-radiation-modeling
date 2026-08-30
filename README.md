@@ -1,7 +1,7 @@
 # Thermal Radiation Modeling
 
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
-![Tests](https://img.shields.io/badge/tests-64%20passing-brightgreen)
+[![Scientific core CI](https://github.com/abhijith-sivaprasadan/non-gray-radiation-modeling/actions/workflows/scientific-core.yml/badge.svg)](https://github.com/abhijith-sivaprasadan/non-gray-radiation-modeling/actions/workflows/scientific-core.yml)
 ![Platform](https://img.shields.io/badge/platform-Windows-lightgrey)
 ![Style](https://img.shields.io/badge/style-black%20%2B%20ruff-000000)
 ![Status](https://img.shields.io/badge/status-v1.0-informational)
@@ -87,13 +87,16 @@ The implemented real-data fixtures come from:
 
 ```powershell
 python scripts/run_all.py        # regenerate every project's outputs
-python -m pytest -q              # 64 tests: physics self-consistency, regression pins, error paths
+python -m pytest -q              # physics self-consistency, regression pins, error paths
 ruff check .                     # scoped to src/scripts/tests, not the vendored submodules
 black --check .
 ```
 
 `pyproject.toml` declares the Python dependencies (`numpy`, `scipy`, `pandas`, `matplotlib`,
 `scikit-learn`; `pytest`/`ruff`/`black` under the `dev` extra).
+
+Install the Python core with `python -m pip install -e ".[dev]"`.
+See [reproducibility and platform boundaries](docs/reproducibility.md).
 
 ## Live Interactive Dashboard
 
