@@ -449,3 +449,9 @@ repository), unmodified copy of the official HITRAN Application Programming Inte
 - Tests that reproduce ML training (`tests/test_surrogate.py`) pin against a tolerance, not
   bit-exact floats, since exact neural-net output can vary slightly across `scikit-learn`
   versions; everything else that has a known closed-form answer is pinned exactly.
+
+
+<!-- ci-workflow-coverage -->
+## Continuous integration
+
+See [CI coverage and limitations](CI.md) for the automated checks. The status badge tracks the published CI review branch.
