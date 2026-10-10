@@ -454,4 +454,4 @@ repository), unmodified copy of the official HITRAN Application Programming Inte
 <!-- ci-workflow-coverage -->
 ## Continuous integration
 
-See [CI coverage and limitations](CI.md) for the automated checks. The status badge tracks the published CI review branch.
+See [CI coverage and limitations](CI.md) for the automated checks. The status badge tracks the default branch.
