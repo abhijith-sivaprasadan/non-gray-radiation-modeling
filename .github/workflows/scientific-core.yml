@@ -1,6 +1,8 @@
 name: Scientific Python core
 
 on:
+  schedule:
+    - cron: "42 3 * * 3"
   workflow_dispatch:
   push:
   pull_request:
@@ -12,13 +14,21 @@ concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+defaults:
+  run:
+    shell: bash
+
+env:
+  PYTHONUTF8: "1"
+
 jobs:
   core:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.11", "3.12"]
     steps:
       - uses: actions/checkout@v6
